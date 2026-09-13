@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<BaseLayout
+  title="Writing"
+  description="Essays on strength, conditioning, and training technology."
+>
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <span class="kicker">Archive</span>
+      <div class="section-head" style="margin-top:0.75rem">
+        <h2>// all writing</h2>
+        <span class="back-link">{posts.length} posts</span>
+      </div>
+
+      <ul class="post-list">
+        {posts.map((post) => (
+          <li class="post-item">
+            <div class="post-meta">
+              <time datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
+            </div>
+            <a class="post-title" href={`/blog/${post.id}/`}>{post.data.title}</a>
+            <p>{post.data.description}</p>
+            {post.data.tags.length > 0 && (
+              <div class="tags">
+                {post.data.tags.map((t) => <span class="tag">{t}</span>)}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

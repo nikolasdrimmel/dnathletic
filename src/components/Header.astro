@@ -1,0 +1,30 @@
+---
+// Site header: logo + primary navigation.
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="/" class="brand" aria-label="DNAthletic home">
+      <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#14181d" stroke="#232a31" />
+        <g stroke="#3ddc97" stroke-width="1.8" stroke-linecap="round">
+          <path d="M11 5C21 11 11 21 21 27" fill="none" />
+          <path d="M21 5C11 11 21 21 11 27" fill="none" />
+          <line x1="12.5" y1="9" x2="19.5" y2="9" />
+          <line x1="13" y1="16" x2="19" y2="16" />
+          <line x1="12.5" y1="23" x2="19.5" y2="23" />
+        </g>
+      </svg>
+      <span>DNA<b>thletic</b></span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a href="/" aria-current={isActive('/') ? 'page' : undefined}>Home</a>
+      <a href="/blog" aria-current={isActive('/blog') ? 'page' : undefined}>Writing</a>
+      <a href="/about" aria-current={isActive('/about') ? 'page' : undefined}>About</a>
+    </nav>
+  </div>
+</header>
