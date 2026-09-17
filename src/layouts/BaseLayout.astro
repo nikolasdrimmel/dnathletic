@@ -18,13 +18,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" translate="no" class="notranslate">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+
+    <!-- Disable mobile browser auto-translation prompts -->
+    <meta name="google" content="notranslate" />
+    <meta name="googlebot" content="notranslate" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -55,7 +59,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
       crossorigin="anonymous"
     />
   </head>
-  <body>
+  <body class="notranslate">
     <Header />
     <main>
       <slot />
