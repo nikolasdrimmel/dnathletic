@@ -1,16 +1,24 @@
 ---
+import BrandIcon from './BrandIcon.astro';
+
 const year = new Date().getFullYear();
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
+const prefix = isHome ? '' : '/';
 ---
 
 <footer class="site-footer">
   <div class="wrap">
-    <span class="brand-mark">DNA<b>thletic</b></span>
-    <nav aria-label="Footer">
-      <a href="/">Home</a>
-      <a href="/blog">Writing</a>
-      <a href="/about">About</a>
+    <a href={`${prefix}#hero`} class="brand-mark" style="display: inline-flex; align-items: center; gap: 0.65rem;" aria-label="DNAthletic">
+      <img src="/favicon.svg" width="24" height="24" class="brand-icon-img" style="width:24px; height:24px;" alt="DNAthletic Icon" />
+      <span>DNA<b>thletic</b></span>
+    </a>
+    <nav aria-label="Footer Navigation">
+      <a href={`${prefix}#hero`}>Home</a>
+      <a href={`${prefix}#articles`}>Articles</a>
+      <a href={`${prefix}#about`}>About</a>
+      <a href={`${prefix}#impressum`}>Impressum</a>
       <a href="/rss.xml">RSS</a>
     </nav>
-    <small>&copy; {year} DNAthletic</small>
+    <small>&copy; {year} DNAthletic. All rights reserved.</small>
   </div>
 </footer>

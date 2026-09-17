@@ -1,10 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#0b0e11"/>
-  <g stroke="#3ddc97" stroke-width="2" stroke-linecap="round" fill="none">
-    <path d="M11 5C21 11 11 21 21 27"/>
-    <path d="M21 5C11 11 21 21 11 27"/>
-    <line x1="12.5" y1="9" x2="19.5" y2="9"/>
-    <line x1="13" y1="16" x2="19" y2="16"/>
-    <line x1="12.5" y1="23" x2="19.5" y2="23"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Rounded Charcoal Background with Palette Warm Off-White Border -->
+  <rect x="2.5" y="2.5" width="95" height="95" rx="22" fill="#16140f" stroke="#f3eee2" stroke-width="4.5"/>
+  
+  <!-- Thick Zero Force Baseline -->
+  <line x1="4" y1="54" x2="96" y2="54" stroke="#8c867a" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
+  
+  <!-- Exact CMJ Force-Time Waveform -->
+  <path d="M 4 54 H 14 C 16 54 17 58 18.5 72 C 20.5 90 27.5 94 29.5 76 C 31.5 60 34 54 39 54 C 45 54 52.5 47 58.5 43 C 64.5 39 70 12 75 12 C 80 12 83.5 38 86.5 54 H 96"
+        stroke="#e9b23c"
+        stroke-width="7.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"/>
 </svg>

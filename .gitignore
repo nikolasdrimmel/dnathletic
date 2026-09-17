@@ -25,3 +25,7 @@ pnpm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# skill references & root assets
+taste-skill-main/
+okay_don_t_pretend_it_s_a_webs.mp4

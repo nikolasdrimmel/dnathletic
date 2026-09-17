@@ -10,66 +10,144 @@ const fmtDate = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
 
-<BaseLayout>
-  <section class="hero">
-    <div class="wrap">
-      <div class="hero-grid">
-        <div>
-          <span class="kicker">Strength · Conditioning · Technology</span>
-          <h1>The science and systems behind getting strong.</h1>
-          <p class="lede">
-            DNAthletic breaks down strength &amp; conditioning — and the technology
-            quietly rewriting how athletes train, recover, and measure progress.
-          </p>
-          <div class="hero-actions">
-            <a href="#writing" class="btn btn--primary">Read the latest</a>
-            <a href="/about" class="btn">About the project</a>
-          </div>
-        </div>
-
-        <!-- Decorative double-helix -->
-        <svg class="helix" width="120" height="260" viewBox="0 0 120 260" fill="none" aria-hidden="true">
-          <g stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <path d="M35 10C95 55 35 115 95 160C35 205 95 250 35 250" opacity="0.9" fill="none" />
-            <path d="M95 10C35 55 95 115 35 160C95 205 35 250 95 250" opacity="0.55" fill="none" />
-          </g>
-          <g stroke="currentColor" stroke-width="2" opacity="0.35">
-            <line x1="42" y1="30" x2="88" y2="30" />
-            <line x1="55" y1="60" x2="65" y2="60" />
-            <line x1="42" y1="90" x2="88" y2="90" />
-            <line x1="55" y1="130" x2="65" y2="130" />
-            <line x1="42" y1="160" x2="88" y2="160" />
-            <line x1="55" y1="200" x2="65" y2="200" />
-            <line x1="42" y1="230" x2="88" y2="230" />
-          </g>
-        </svg>
+<BaseLayout
+  title="DNAthletic - Science, Systems & Performance"
+  description="A minimalist publication exploring strength science, conditioning, and training technology."
+>
+  <!-- 1. Presenting Dunk Video Hero Section -->
+  <section id="hero" class="hero-presentation">
+    <div class="video-stage">
+      <div class="video-ambient-glow" aria-hidden="true"></div>
+      <div class="video-frame">
+        <video
+          src="/dunk.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="auto"
+          class="hero-video"
+          aria-label="Basketball player performing a dunk"
+        ></video>
+        <div class="video-vignette" aria-hidden="true"></div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="writing">
-    <div class="wrap wrap--narrow">
+  <!-- 2. Articles Section (Swiss Editorial Index) -->
+  <section id="articles" class="section">
+    <div class="wrap">
       <div class="section-head">
-        <h2>// latest writing</h2>
-        <a href="/blog" class="back-link">All posts →</a>
+        <h2 class="section-title">Articles</h2>
+        <span class="section-badge">{posts.length} {posts.length === 1 ? 'Article' : 'Articles'}</span>
       </div>
 
-      <ul class="post-list">
-        {posts.map((post) => (
-          <li class="post-item">
-            <div class="post-meta">
-              <time datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
-            </div>
-            <a class="post-title" href={`/blog/${post.id}/`}>{post.data.title}</a>
-            <p>{post.data.description}</p>
-            {post.data.tags.length > 0 && (
-              <div class="tags">
-                {post.data.tags.map((t) => <span class="tag">{t}</span>)}
+      {posts.length > 0 ? (
+        <div class="article-index">
+          {posts.map((post) => (
+            <a href={`/blog/${post.id}/`} class="article-row">
+              <div class="article-row-meta">
+                <time class="article-row-date" datetime={post.data.pubDate.toISOString()}>
+                  {fmtDate(post.data.pubDate)}
+                </time>
+                {post.data.tags.length > 0 && (
+                  <span class="article-row-tag">{post.data.tags[0]}</span>
+                )}
               </div>
-            )}
-          </li>
-        ))}
-      </ul>
+
+              <div class="article-row-body">
+                <h3 class="article-row-title">{post.data.title}</h3>
+                <p class="article-row-desc">{post.data.description}</p>
+              </div>
+
+              <div class="article-row-action" aria-hidden="true">
+                <span>Read</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-posts">
+          <p>No articles published yet. Articles placed in <code>src/content/blog/</code> will appear here automatically.</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- 3. About Section (Editorial Manifesto & Two Core Pillars) -->
+  <section id="about" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title">About DNAthletic</h2>
+        <span class="section-badge">Mission &amp; Focus</span>
+      </div>
+
+      <div class="about-intro">
+        DNAthletic is an independent notebook exploring the mechanics of human strength.
+        The goal is to bridge empirical laboratory research with the practical realities of the barbell.
+      </div>
+
+      <div class="about-pillars">
+        <div class="pillar-item">
+          <h3 class="pillar-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18h12"/><path d="M6 6h12"/><path d="M18 12H6"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
+            Strength &amp; Biomechanics
+          </h3>
+          <p class="pillar-desc">
+            Deconstructing bar velocity, fatigue management, periodization models, and neuromuscular adaptations across compound movements.
+          </p>
+        </div>
+
+        <div class="pillar-item">
+          <h3 class="pillar-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Velocity &amp; Sensor Telemetry
+          </h3>
+          <p class="pillar-desc">
+            Evaluating linear position transducers, force plates, and mathematical models to quantify load, readiness, and true velocity loss.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Impressum Section (Architectural Specs Grid) -->
+  <section id="impressum" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title">Impressum</h2>
+        <span class="section-badge">Legal &amp; Contact</span>
+      </div>
+
+      <div class="impressum-specs">
+        <div class="spec-block">
+          <span class="spec-label">Site Operator &amp; Publisher</span>
+          <div class="spec-val">
+            <strong>Nikolas Drimmel</strong><br />
+            DNAthletic Project
+          </div>
+        </div>
+
+        <div class="spec-block">
+          <span class="spec-label">Direct Contact</span>
+          <div class="spec-val">
+            Email: <a href="mailto:contact@dnathletic.com">contact@dnathletic.com</a><br />
+            Web: <a href="https://dnathletic.com">dnathletic.com</a>
+          </div>
+        </div>
+
+        <div class="spec-block">
+          <span class="spec-label">Publishing Format</span>
+          <div class="spec-val">
+            Occasional scientific essays, LaTeX mathematical derivations, and training technology analysis.
+          </div>
+        </div>
+      </div>
+
+      <p class="impressum-disclaimer">
+        Disclaimer: The contents of this website are created for editorial and informational purposes. While care is taken to ensure scientific rigor, training decisions should always be adapted to individual capacities.
+      </p>
     </div>
   </section>
 </BaseLayout>

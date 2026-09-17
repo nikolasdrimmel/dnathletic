@@ -1,30 +1,57 @@
 ---
-// Site header: logo + primary navigation.
-const path = Astro.url.pathname;
-const isActive = (href: string) =>
-  href === '/' ? path === '/' : path.startsWith(href);
+import BrandIcon from './BrandIcon.astro';
+
+// Header with responsive, smooth anchor navigation for the one-page layout
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
+const prefix = isHome ? '' : '/';
 ---
 
 <header class="site-header">
   <div class="wrap">
-    <a href="/" class="brand" aria-label="DNAthletic home">
-      <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <rect width="32" height="32" rx="7" fill="#14181d" stroke="#232a31" />
-        <g stroke="#3ddc97" stroke-width="1.8" stroke-linecap="round">
-          <path d="M11 5C21 11 11 21 21 27" fill="none" />
-          <path d="M21 5C11 11 21 21 11 27" fill="none" />
-          <line x1="12.5" y1="9" x2="19.5" y2="9" />
-          <line x1="13" y1="16" x2="19" y2="16" />
-          <line x1="12.5" y1="23" x2="19.5" y2="23" />
-        </g>
-      </svg>
+    <a href={`${prefix}#hero`} class="brand" aria-label="DNAthletic home">
+      <img src="/favicon.svg" width="34" height="34" class="brand-icon-img" alt="DNAthletic Icon" />
       <span>DNA<b>thletic</b></span>
     </a>
 
-    <nav class="nav" aria-label="Primary">
-      <a href="/" aria-current={isActive('/') ? 'page' : undefined}>Home</a>
-      <a href="/blog" aria-current={isActive('/blog') ? 'page' : undefined}>Writing</a>
-      <a href="/about" aria-current={isActive('/about') ? 'page' : undefined}>About</a>
+    <nav class="nav" aria-label="Primary Navigation">
+      <a href={`${prefix}#hero`} class="nav-link" data-nav="hero">Home</a>
+      <a href={`${prefix}#articles`} class="nav-link" data-nav="articles">Articles</a>
+      <a href={`${prefix}#about`} class="nav-link" data-nav="about">About</a>
+      <a href={`${prefix}#impressum`} class="nav-link" data-nav="impressum">Impressum</a>
     </nav>
   </div>
 </header>
+
+<script>
+  // Dynamic active link highlighting on scroll for one-page homepage
+  if (window.location.pathname === '/' || window.location.pathname === '') {
+    const navLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-link[data-nav]');
+    const sectionIds = ['hero', 'articles', 'about', 'impressum'];
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -70% 0px',
+      threshold: 0,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navLinks.forEach((link) => {
+            if (link.getAttribute('data-nav') === id) {
+              link.classList.add('active');
+            } else {
+              link.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach((sec) => observer.observe(sec));
+  }
+</script>

@@ -13,7 +13,7 @@ const {
   description = 'Strength, conditioning, and the technology behind how we train.',
 } = Astro.props;
 
-const fullTitle = title === 'DNAthletic' ? title : `${title} — DNAthletic`;
+const fullTitle = title.includes('DNAthletic') ? title : `${title} - DNAthletic`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
@@ -40,12 +40,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Fonts -->
+    <!-- Typography: Outfit (Display), Inter (Prose), JetBrains Mono (Telemetry) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap"
       rel="stylesheet"
+    />
+
+    <!-- KaTeX math CSS for LaTeX rendering -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+      crossorigin="anonymous"
     />
   </head>
   <body>
