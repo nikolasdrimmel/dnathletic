@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <!-- Rounded Charcoal Background with Palette Warm Off-White Border -->
-  <rect x="2.5" y="2.5" width="95" height="95" rx="22" fill="#16140f" stroke="#f3eee2" stroke-width="4.5"/>
+  <rect x="2.5" y="2.5" width="95" height="95" rx="22" fill="#111315" stroke="#f3eee2" stroke-width="4.5"/>
   
   <!-- Thick Zero Force Baseline -->
   <line x1="4" y1="54" x2="96" y2="54" stroke="#8c867a" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
