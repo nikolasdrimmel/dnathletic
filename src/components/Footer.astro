@@ -7,18 +7,18 @@ const prefix = isHome ? '' : '/';
 ---
 
 <footer class="site-footer">
-  <div class="wrap">
-    <a href={`${prefix}#hero`} class="brand-mark" style="display: inline-flex; align-items: center; gap: 0.65rem;" aria-label="DNAthletic">
-      <BrandIcon size={24} class="brand-icon-img" />
-      <span>DNA<b>thletic</b></span>
-    </a>
-    <nav aria-label="Footer Navigation">
-      <a href={`${prefix}#hero`}>Home</a>
-      <a href={`${prefix}#articles`}>Articles</a>
-      <a href={`${prefix}#about`}>About</a>
-      <a href={`${prefix}#impressum`}>Impressum</a>
-      <a href="/rss.xml">RSS</a>
-    </nav>
-    <small>&copy; {year} DNAthletic. All rights reserved.</small>
+  <div class="wrap site-footer__inner">
+    <div class="site-footer__brand">
+      <a href={`${prefix}#home`} class="brand-mark" aria-label="DNAthletic">
+        <BrandIcon size={26} class="brand-icon-img" />
+        <span>DNA<b>thletic</b></span>
+      </a>
+      <small>&copy; {year} DNAthletic. All rights reserved.</small>
+    </div>
+
+    <div class="footer-legal">
+      <a href="/impressum" class="footer-link">Impressum</a>
+      <a href="/datenschutz" class="footer-link">Privacy</a>
+    </div>
   </div>
 </footer>

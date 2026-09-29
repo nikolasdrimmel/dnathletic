@@ -26,6 +26,5 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 
-# skill references & root assets
-taste-skill-main/
-okay_don_t_pretend_it_s_a_webs.mp4
+# local source material (article manuscripts, not deployed)
+_source/

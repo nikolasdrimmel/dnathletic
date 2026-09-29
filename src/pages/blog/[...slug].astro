@@ -27,10 +27,6 @@ const fmtDate = (d: Date) =>
       </a>
 
       <header class="article-header">
-        <span class="kicker">
-          <span class="kicker-dot"></span>
-          {post.data.tags[0] ?? 'Article'}
-        </span>
         <h1>{post.data.title}</h1>
         {post.data.subtitle && (
           <p class="article-subtitle">{post.data.subtitle}</p>

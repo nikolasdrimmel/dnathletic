@@ -15,7 +15,7 @@ const fmtDate = (d: Date) =>
   description="A minimalist publication exploring strength science, conditioning, and training technology."
 >
   <!-- 1. Presenting Dunk Video Hero Section -->
-  <section id="hero" class="hero-presentation">
+  <section id="home" class="hero-presentation">
     <div class="video-stage">
       <div class="video-ambient-glow" aria-hidden="true"></div>
       <div class="video-frame">
@@ -29,7 +29,6 @@ const fmtDate = (d: Date) =>
           class="hero-video"
           aria-label="Basketball player performing a dunk"
         ></video>
-        <div class="video-vignette" aria-hidden="true"></div>
       </div>
     </div>
   </section>
@@ -75,79 +74,39 @@ const fmtDate = (d: Date) =>
     </div>
   </section>
 
-  <!-- 3. About Section (Editorial Manifesto & Two Core Pillars) -->
+  <!-- 3. About Me Section (Personal Profile) -->
   <section id="about" class="section">
     <div class="wrap">
       <div class="section-head">
-        <h2 class="section-title">About DNAthletic</h2>
-        <span class="section-badge">Mission &amp; Focus</span>
+        <h2 class="section-title">About Me</h2>
       </div>
 
-      <div class="about-intro">
-        DNAthletic is an independent notebook exploring the mechanics of human strength.
-        The goal is to bridge empirical laboratory research with the practical realities of the barbell.
-      </div>
-
-      <div class="about-pillars">
-        <div class="pillar-item">
-          <h3 class="pillar-title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18h12"/><path d="M6 6h12"/><path d="M18 12H6"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
-            Strength &amp; Biomechanics
-          </h3>
-          <p class="pillar-desc">
-            Deconstructing bar velocity, fatigue management, periodization models, and neuromuscular adaptations across compound movements.
-          </p>
+      <div class="about-me">
+        <div class="about-me__profile">
+          <img
+            src="/images/about/nikolas.png"
+            alt="Nikolas Drimmel"
+            class="about-me__photo"
+            width="200"
+            height="200"
+            loading="lazy"
+          />
+          <div class="about-me__id">
+            <span class="about-me__title">Sport Student</span>
+            <span class="about-me__cred">B.Sc. Sport and Performance Student</span>
+            <span class="about-me__cred">German Sports University Cologne</span>
+          </div>
         </div>
 
-        <div class="pillar-item">
-          <h3 class="pillar-title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            Velocity &amp; Sensor Telemetry
-          </h3>
-          <p class="pillar-desc">
-            Evaluating linear position transducers, force plates, and mathematical models to quantify load, readiness, and true velocity loss.
+        <div class="about-me__bio">
+          <p>
+            With <strong>DNAthletic</strong>, I want to provide a high-quality
+            information source in Strength &amp; Conditioning for ambitious athletes
+            and practitioners in these topics.
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 4. Impressum Section (Architectural Specs Grid) -->
-  <section id="impressum" class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <h2 class="section-title">Impressum</h2>
-        <span class="section-badge">Legal &amp; Contact</span>
-      </div>
-
-      <div class="impressum-specs">
-        <div class="spec-block">
-          <span class="spec-label">Site Operator &amp; Publisher</span>
-          <div class="spec-val">
-            <strong>Nikolas Drimmel</strong><br />
-            DNAthletic Project
-          </div>
-        </div>
-
-        <div class="spec-block">
-          <span class="spec-label">Direct Contact</span>
-          <div class="spec-val">
-            Email: <a href="mailto:contact@dnathletic.com">contact@dnathletic.com</a><br />
-            Web: <a href="https://dnathletic.com">dnathletic.com</a>
-          </div>
-        </div>
-
-        <div class="spec-block">
-          <span class="spec-label">Publishing Format</span>
-          <div class="spec-val">
-            Occasional scientific essays, LaTeX mathematical derivations, and training technology analysis.
-          </div>
-        </div>
-      </div>
-
-      <p class="impressum-disclaimer">
-        Disclaimer: The contents of this website are created for editorial and informational purposes. While care is taken to ensure scientific rigor, training decisions should always be adapted to individual capacities.
-      </p>
-    </div>
-  </section>
 </BaseLayout>
