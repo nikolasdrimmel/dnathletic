@@ -50,10 +50,28 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* No native smooth scrolling: Lenis (src/scripts/motion.ts) handles it. */
   scroll-padding-top: var(--header-height);
   /* Single global guard against horizontal overflow (clips, no scroll container). */
   overflow-x: clip;
+}
+
+/* Lenis base rules (from lenis/dist/lenis.css) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 body {
@@ -147,6 +165,16 @@ a:hover {
   background: rgba(17, 19, 21, 0.9);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  transition: background-color 0.35s ease, border-color 0.35s ease;
+  view-transition-name: site-header;
+}
+
+/* Homepage: floats transparently over the hero footage until it scrolls away. */
+.site-header.is-over-hero {
+  background: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .site-header .wrap {
@@ -294,94 +322,276 @@ a:hover {
 }
 
 /* ============================================================
-   Hero Section - Presenting Video Stage
+   Athlete Stage — scroll-scrubbed animation canvas
+   (src/components/AthleteStage.astro + src/scripts/athlete.ts)
    ============================================================ */
 
-.hero-presentation {
-  scroll-margin-top: var(--header-height);
-  padding-top: clamp(1rem, 2.5vw, 2rem);
-  padding-bottom: clamp(2.5rem, 4.5vw, 4rem);
-  padding-inline: 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
-
-.video-stage {
-  position: relative;
-  width: 100%;
-  max-width: min(94vw, 1340px);
-  margin-inline: auto;
-  aspect-ratio: 16 / 9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  border-radius: var(--radius-lg, 14px);
-}
-
-@media (max-width: 640px) {
-  .hero-presentation {
-    padding-inline: 1rem;
-    padding-top: 1rem;
-    padding-bottom: 2rem;
-  }
-  .video-stage {
-    border-radius: var(--radius, 10px);
-  }
-}
-
-/* Subtle ambient warmth behind the video (gold only — no grey halo that would
-   read as a box against the page background). */
-.video-ambient-glow {
-  position: absolute;
-  inset: -8%;
-  background: radial-gradient(
-    ellipse 75% 65% at 50% 50%,
-    rgba(233, 178, 60, 0.06) 0%,
-    transparent 72%
-  );
-  filter: blur(50px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.video-frame {
+.athlete {
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  /* Transparent so the feathered edges dissolve into the real page background
-     (which carries the gold gradient) instead of a solid color rectangle. */
-  background-color: transparent;
-  border-radius: var(--radius-lg, 14px);
-  z-index: 1;
+}
 
-  /* Feathered edge mask so video seamlessly dissolves into background.
-     Wider fade zones = smoother, more gradual dissolve into the page.
-     Left/right & bottom fades are extra soft:
-     Top fade: 22%
-     Bottom fade: 32%
-     Left/Right fade: 16%
-  */
+.athlete__poster,
+.athlete__canvas,
+.athlete__curve {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.athlete__poster {
+  object-fit: cover;
+}
+
+/* Photoreal clips outside the hero dissolve into the page on every edge. */
+.athlete--frames:not(.hero__media) {
   -webkit-mask-image:
-    linear-gradient(to bottom, transparent 0%, black 22%, black 68%, transparent 100%),
-    linear-gradient(to right, transparent 0%, black 16%, black 84%, transparent 100%);
+    linear-gradient(to bottom, transparent 0%, #000 14%, #000 80%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
   -webkit-mask-composite: source-in;
   mask-image:
-    linear-gradient(to bottom, transparent 0%, black 22%, black 68%, transparent 100%),
-    linear-gradient(to right, transparent 0%, black 16%, black 84%, transparent 100%);
+    linear-gradient(to bottom, transparent 0%, #000 14%, #000 80%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
   mask-composite: intersect;
 }
 
-.hero-video {
+/* Fallback animation: the brand CMJ force–time curve draws itself. */
+.athlete__curve {
+  padding: 12%;
+  overflow: visible;
+}
+
+.athlete__curve-base {
+  stroke: var(--c-line);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.athlete__curve-path {
+  fill: none;
+  stroke: var(--c-gold);
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  filter: drop-shadow(0 0 6px rgba(233, 178, 60, 0.35));
+}
+
+/* Motion-capture HUD (built by src/scripts/mocap.ts) */
+.mocap-hud {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.5rem;
+  display: grid;
+  gap: 0.35rem;
+  width: 11rem;
+  padding: 0.85rem 0.95rem 0.8rem;
+  background: rgba(26, 29, 33, 0.6);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-mono);
+  pointer-events: none;
+}
+
+.mocap-hud__label {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+.mocap-hud__value {
+  font-size: 0.78rem;
+  color: var(--c-muted);
+}
+
+.mocap-hud__value b {
+  font-size: 1.7rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-ink);
+  transition: color 0.2s ease;
+}
+
+.mocap-hud__value b.is-concentric {
+  color: var(--c-gold);
+}
+
+.mocap-hud__spark {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+  height: 36px;
+  overflow: visible;
+}
+
+.mocap-hud__zero {
+  stroke: var(--c-line);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.mocap-hud__curve {
+  fill: none;
+  stroke: rgba(243, 238, 226, 0.18);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.mocap-hud__curve.is-live {
+  stroke: var(--c-gold);
+}
+
+.mocap-hud__cursor {
+  fill: var(--c-gold);
+}
+
+.mocap-hud__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+.mocap-hud__meta b {
+  font-weight: 500;
+  color: var(--c-ink);
+}
+
+.mocap-hud__mcv {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mocap-hud__mcv.is-visible {
+  opacity: 1;
+}
+
+.mocap-hud__mcv b {
+  color: var(--c-gold);
+}
+
+@media (max-width: 768px) {
+  .mocap-hud {
+    top: 0.25rem;
+    right: 0;
+    width: 9.25rem;
+    padding: 0.6rem 0.7rem;
+    gap: 0.25rem;
+  }
+  .mocap-hud__value b {
+    font-size: 1.3rem;
+  }
+  .mocap-hud__spark {
+    height: 26px;
+  }
+}
+
+/* ============================================================
+   Hero — full-screen dunk, scrubbed by scroll (src/scripts/home.ts)
+   ============================================================ */
+
+.hero {
+  position: relative;
+  /* Sit under the fixed header so the footage fills the whole viewport. */
+  margin-top: calc(-1 * var(--header-height));
+}
+
+.hero__stage {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  /* Bottom edge dissolves into the page so the dunk flows into Articles. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 66%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 66%, transparent 100%);
+}
+
+/* Keeps the transparent header legible over the bright arena lights. */
+.hero__shade {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 30%;
+  background: linear-gradient(to bottom, rgba(17, 19, 21, 0.72), transparent);
+  pointer-events: none;
+}
+
+.hero__wordmark {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(3.4rem, 13.5vw, 12.5rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-shadow: 0 10px 50px rgba(17, 19, 21, 0.6);
+  will-change: transform, opacity, filter;
+}
+
+.hero__wordmark b {
+  color: var(--c-gold);
+  font-weight: 700;
+}
+
+.hero__cue {
+  position: absolute;
+  z-index: 1;
+  bottom: clamp(1.25rem, 4vh, 2.25rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+.hero__cue i {
+  width: 1px;
+  height: 2.5rem;
+  background: linear-gradient(to bottom, var(--c-gold), transparent);
+  transform-origin: top;
+  animation: hero-cue 2.2s ease-in-out infinite;
+}
+
+@keyframes hero-cue {
+  0% { transform: scaleY(0); opacity: 1; }
+  60% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+
+/* Portrait phones: a full-height crop would lose the athlete or the rim, so
+   the footage sits in a tall feathered band that keeps the whole action. */
+@media (max-aspect-ratio: 4/5) {
+  .hero__media {
+    inset: auto 0;
+    top: 50%;
+    height: min(100%, 135vw);
+    transform: translateY(-50%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 76%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 76%, transparent 100%);
+  }
 }
 
 /* ============================================================
@@ -447,111 +657,162 @@ a:hover {
 }
 
 /* ============================================================
-   Articles Section (Swiss Editorial Index)
+   Articles — pinned showcase (src/scripts/home.ts)
+   Without JS / with reduced motion the slides simply stack as a list;
+   `.is-pinned` (added by JS) stacks them in one viewport-high stage.
    ============================================================ */
 
-.article-index {
-  display: flex;
-  flex-direction: column;
-}
-
-.article-row {
-  display: grid;
-  grid-template-columns: 140px 1fr auto;
-  gap: 2rem;
-  align-items: baseline;
-  padding-block: 1.75rem;
-  border-bottom: 1px solid var(--c-line);
-  text-decoration: none;
-  transition: background-color 0.15s ease, padding-left 0.15s ease;
+.showcase {
   position: relative;
+  padding-block: 4.5rem 2rem;
 }
 
-.article-row:first-child {
-  border-top: 1px solid var(--c-line);
-}
-
-.article-row:hover {
-  text-decoration: none;
-}
-
-.article-row-meta {
+.slides {
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 4rem;
+  width: 100%;
+  max-width: var(--maxw-wide);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
 }
 
-.article-row-date {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--c-muted);
-  letter-spacing: 0.04em;
-}
-
-.article-row-tag {
-  font-family: var(--font-mono);
-  font-size: 0.675rem;
-  color: var(--c-gold);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.article-row-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.article-row-title {
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 600;
-  color: var(--c-ink);
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-  transition: color 0.15s ease;
-}
-
-.article-row:hover .article-row-title {
-  color: var(--c-gold);
-}
-
-.article-row-desc {
-  font-size: 0.95rem;
-  color: var(--c-muted);
-  line-height: 1.6;
-  max-width: 60ch;
-}
-
-.article-row-action {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--c-muted);
-  display: flex;
+.slide {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   align-items: center;
-  gap: 0.4rem;
-  white-space: nowrap;
-  transition: transform 0.2s ease, color 0.15s ease;
+  gap: 2rem clamp(2rem, 5vw, 5rem);
 }
 
-.article-row:hover .article-row-action {
+.slide__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.4rem;
+}
+
+/* Clips the text roll between articles. */
+.roll {
+  overflow: hidden;
+  padding-block: 0.1em;
+  margin-block: -0.1em;
+}
+
+.slide__num {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+  letter-spacing: 0.04em;
+  color: var(--c-muted);
+  opacity: 1;
+}
+
+.slide__num span {
+  font-size: clamp(3.25rem, 7.5vw, 6.5rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
   color: var(--c-gold);
-  transform: translateX(4px);
 }
 
+.slide__title {
+  font-size: clamp(1.8rem, 3.4vw, 3.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  max-width: 17ch;
+}
+
+.slide__title a {
+  color: var(--c-ink);
+}
+
+.slide__title a:hover {
+  color: var(--c-gold);
+}
+
+.slide__visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  max-height: 72vh;
+}
+
+.slide__visual .athlete {
+  position: absolute;
+  inset: 0;
+}
+
+.showcase.is-pinned {
+  padding-block: 0;
+}
+
+.showcase.is-pinned .showcase__stage {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100svh;
+  padding-top: calc(var(--header-height) + clamp(1rem, 3.5vh, 2.5rem));
+  padding-bottom: clamp(1rem, 4vh, 3rem);
+}
+
+.showcase.is-pinned .showcase__head {
+  margin-bottom: 0;
+}
+
+.showcase.is-pinned .slides {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  gap: 0;
+}
+
+.showcase.is-pinned .slide {
+  position: absolute;
+  inset: 0 1.5rem;
+  grid-template-rows: minmax(0, 100%);
+}
+
+.showcase.is-pinned .slide__visual {
+  height: 100%;
+  aspect-ratio: auto;
+  max-height: none;
+}
+
+/* Phones: animation on top, article info below. */
 @media (max-width: 768px) {
-  .article-row {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-    padding-block: 1.5rem;
+  .slides {
+    padding-inline: 1rem;
   }
-  .article-row-meta {
-    flex-direction: row;
+  .slide {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+  .slide__visual {
+    order: -1;
+  }
+  .slide__text {
+    gap: 0.9rem;
     align-items: center;
-    gap: 0.75rem;
+    text-align: center;
   }
-  .article-row-action {
-    display: none;
+  .slide__num {
+    justify-content: center;
+  }
+  .slide__title {
+    margin-inline: auto;
+  }
+  .showcase.is-pinned .slide {
+    inset: 0 1rem;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+  .showcase.is-pinned .showcase__stage {
+    padding-top: calc(var(--header-height) + 0.75rem);
+  }
+  .showcase.is-pinned .showcase__head {
+    padding-bottom: 0.6rem;
   }
 }
 
@@ -680,43 +941,85 @@ a:hover {
    About Me Section (Personal Profile: photo + credentials + bio)
    ============================================================ */
 
+.about {
+  padding-block: clamp(4.5rem, 12vh, 8rem) 2rem;
+}
+
 .about-me {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 2.5rem 3.5rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 3rem clamp(3rem, 7vw, 6.5rem);
   align-items: center;
 }
 
-/* Left column: circular photo with credentials underneath */
+/* Left column: circular photo (gold ring, tilt, parallax) + credentials */
 .about-me__profile {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.1rem;
+  gap: 1.75rem;
   text-align: center;
 }
 
+.about-me__photo-wrap {
+  position: relative;
+  width: 240px;
+  aspect-ratio: 1;
+  perspective: 900px;
+}
+
+.about-me__ring {
+  position: absolute;
+  inset: -16px;
+  width: calc(100% + 32px);
+  height: calc(100% + 32px);
+  transform: rotate(-90deg); /* ring starts drawing at 12 o'clock */
+  overflow: visible;
+  pointer-events: none;
+}
+
+.about-me__ring circle {
+  fill: none;
+  stroke-width: 0.6;
+}
+
+.about-me__ring-track {
+  stroke: var(--c-line);
+}
+
+.about-me__ring-progress {
+  stroke: var(--c-gold);
+  stroke-linecap: round;
+  /* 0–100 scale: GSAP rounds px values, so a 0–1 scale would snap. */
+  stroke-dasharray: 100;
+  stroke-dashoffset: 0;
+  filter: drop-shadow(0 0 5px rgba(233, 178, 60, 0.4));
+}
+
 .about-me__photo {
-  width: 200px;
-  height: 200px;
+  display: block;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
   object-position: center top;
   background:
     radial-gradient(circle at 50% 38%, var(--c-panel-hover), var(--c-panel) 70%);
   border: 1px solid var(--c-line);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 18px 40px rgba(17, 19, 21, 0.65);
+  will-change: transform;
 }
 
 .about-me__id {
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.35rem;
 }
 
 .about-me__title {
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: var(--c-ink);
   letter-spacing: -0.01em;
@@ -726,20 +1029,20 @@ a:hover {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   line-height: 1.45;
+  letter-spacing: 0.02em;
   color: var(--c-muted);
 }
 
-/* Right column: bio */
+/* Right column: bio as a statement; words light up with the scroll */
 .about-me__bio {
-  font-size: 1.15rem;
-  line-height: 1.75;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.45rem, 2.7vw, 2.4rem);
+  line-height: 1.28;
+  letter-spacing: -0.025em;
   color: var(--c-ink);
-  max-width: 46ch;
-}
-
-.about-me__bio p {
-  margin: 0;
-  opacity: 0.95;
+  opacity: 1;
+  max-width: 26ch;
 }
 
 .about-me__bio strong {
@@ -750,13 +1053,17 @@ a:hover {
 /* Phone: photo + credentials on top, bio underneath, all centered */
 @media (max-width: 768px) {
   .about-me {
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
     justify-items: center;
     text-align: center;
   }
+  .about-me__photo-wrap {
+    width: 200px;
+  }
   .about-me__bio {
-    max-width: 52ch;
+    max-width: 22ch;
+    margin-inline: auto;
   }
 }
 
@@ -826,20 +1133,47 @@ a:hover {
    ============================================================ */
 
 .article {
-  padding-block: 3rem 5rem;
+  padding-bottom: 5rem;
 }
 
-.article-header {
-  margin-bottom: 2.5rem;
+/* Header: title left, the article's athlete animation right (scrubbed by
+   src/scripts/article.ts; briefly pinned on large screens). */
+.article-hero {
+  padding-block: clamp(1.5rem, 4vh, 2.5rem) clamp(2rem, 5vh, 3.5rem);
+  margin-bottom: 3rem;
   border-bottom: 1px solid var(--c-line);
-  padding-bottom: 2rem;
+  background: var(--c-bg);
 }
 
-.article-header h1 {
-  font-size: clamp(2.2rem, 5vw, 3.2rem);
-  margin-top: 0.75rem;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
+.article-hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  align-items: center;
+  gap: 2rem clamp(2rem, 5vw, 4.5rem);
+  /* Whole header fits one viewport while it's pinned. */
+  min-height: min(calc(100svh - var(--header-height) - 10rem), 40rem);
+}
+
+.article-hero .back-link {
+  margin-bottom: 0.5rem;
+}
+
+.article-hero h1 {
+  font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.article-hero__visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  max-height: 68svh;
+}
+
+.article-hero__visual .athlete {
+  position: absolute;
+  inset: 0;
 }
 
 .article-subtitle {
@@ -850,16 +1184,74 @@ a:hover {
   font-weight: 400;
 }
 
-
-.article-header .post-meta {
+.article-hero .post-meta {
   margin-top: 1.25rem;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
+  gap: 0.35rem 0.6rem;
   font-family: var(--font-mono);
   font-size: 0.8rem;
   color: var(--c-muted);
   letter-spacing: 0.04em;
+}
+
+@media (max-width: 899px) {
+  .article-hero__grid {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+  .article-hero__visual {
+    order: -1;
+    max-width: 24rem;
+    max-height: none;
+    justify-self: center;
+  }
+}
+
+/* Reading progress (gold hairline under the header) */
+.read-progress {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  z-index: 999;
+  height: 2px;
+  background: var(--c-gold);
+  box-shadow: 0 0 10px rgba(233, 178, 60, 0.45);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+.article-tags {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--c-line);
+}
+
+.article-cta {
+  margin-top: 3.5rem;
+  padding: 2rem;
+  background: var(--c-panel);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.article-cta h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.article-cta p {
+  font-size: 0.9rem;
+  color: var(--c-muted);
+  margin: 0;
 }
 
 .back-link {
@@ -1234,6 +1626,52 @@ a:hover {
 }
 
 /* ============================================================
+   Reveals & Page Transitions
+   ============================================================ */
+
+/* One-time fade-up (src/scripts/motion.ts adds .has-reveal / .is-revealed). */
+.has-reveal [data-reveal],
+.has-reveal .prose .figure-card,
+.has-reveal .prose .math-panel {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.has-reveal .is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Cross-page transitions (Chrome/Edge/Safari 18+; others navigate normally).
+   The header stays put; the athlete morphs from the homepage showcase into
+   the article header via matching view-transition-name. */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: 0.22s ease both vt-fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 0.38s ease both vt-fade-in;
+}
+
+::view-transition-group(*) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes vt-fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes vt-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+/* ============================================================
    Accessibility & Reduced Motion
    ============================================================ */
 
@@ -1244,8 +1682,8 @@ a:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  @view-transition {
+    navigation: none;
   }
   * {
     transition: none !important;

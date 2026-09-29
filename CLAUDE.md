@@ -37,6 +37,17 @@ Every session, before proposing or making changes, read:
 - **KaTeX** for LaTeX math (`remark-math` + `rehype-katex`); KaTeX assets are **self-hosted** in `public/vendor/katex/` (matches installed `katex@0.18.7` — do not re-add a CDN link).
 - Fonts are **self-hosted** in `public/fonts/` (`fonts.css` + woff2). Do not re-add Google Fonts `<link>`s.
 - RSS (`src/pages/rss.xml.js`) + sitemap (`@astrojs/sitemap`).
+- **Scroll engine:** `gsap` (+ `ScrollTrigger`) and `lenis` from npm, bundled by Vite — no CDN (~51 KB gzipped). Bootstrapped once per page in `src/scripts/motion.ts`.
+
+## Scroll experience & athlete animations
+
+- **Homepage** (`src/scripts/home.ts`): ① `#home` hero is pinned and scroll scrubs the dunk frame sequence while the "DNAthletic" wordmark fades out; ② `#articles` is pinned — each article gets a scroll segment (1.25 screens) that plays its athlete animation, then crossfades + text-rolls to the next; ③ `#about`: gold ring draw, word-by-word bio, staggered credentials, photo parallax + pointer tilt.
+- **Article pages** (`src/scripts/article.ts`): header with the article's athlete animation (pinned briefly on large screens), gold reading-progress bar. Cross-page CSS view transitions morph the athlete between showcase and article (`view-transition-name: athlete-<slug>`).
+- **Animations registry:** `src/data/animations.ts`. An article opts in with `animation: <id>` in its frontmatter; without it the brand force–time curve (`force-curve`) is used. Kinds: `frames` (WebP sequence in `public/anim/<id>/`), `mocap` (code-drawn figure, `src/scripts/mocap.ts`), `curve`.
+- **New clip → animation:** `node scripts/make-frames.mjs <clip.mp4> <id>` (needs ffmpeg), paste the printed entry into `animations.ts`, set `animation: <id>` on the post. Clips should have a locked camera, one complete rep, and dark edges (they're feathered into the page). Higgsfield is connected but the account is on the free plan, which blocks the video/image models used so far.
+- `back-squat` is currently the code-drawn **mocap** placeholder for the VBT article — swap it to a `frames` entry once a photoreal clip exists.
+- **Reduced motion:** no Lenis, no pinning, static frames, plain list, no view transitions. Keep that path working.
+- Canvas colours are read from the palette CSS variables — don't hard-code new colours in scripts.
 
 ## Run locally
 
@@ -85,28 +96,31 @@ Derived tints already in use: `--c-gold-dim` (soft gold wash), `--c-panel-hover`
 - Dark, editorial, restrained. Generous whitespace, hairline dividers, gold mono uppercase labels for sections/specs. (The old gold-dot "kicker" mini-heading was removed site-wide — do not reintroduce it.)
 - Container widths: `--maxw` 52rem (reading column), `--maxw-wide` 74rem (hero/header), plus `.wrap--editorial` 58rem for articles.
 - Corner radii scale: `--radius-sm` 6px, `--radius` 10px, `--radius-lg` 14px.
-- **Fully responsive** — must work cleanly at desktop AND mobile (test at 375px, no horizontal overflow). A single `overflow-x: clip` on `html` + `overflow: hidden` on the hero is the overflow guard; don't reintroduce scattered `max-width:100vw` hacks.
+- **Fully responsive** — must work cleanly at desktop AND mobile (test at 375px, no horizontal overflow). A single `overflow-x: clip` on `html` + `overflow: hidden` on `.hero__stage` is the overflow guard; don't reintroduce scattered `max-width:100vw` hacks. Phones: the showcase stacks animation-on-top / text-below; the hero footage sits in a feathered band so athlete + rim stay in view.
 - Respect `prefers-reduced-motion` (already handled globally).
 
 ## Structure
 
 ```
 src/
-  layouts/BaseLayout.astro     # <head>, fonts, KaTeX, header/footer shell
-  components/                  # Header, Footer, BrandIcon (CMJ force-time SVG logo)
+  layouts/BaseLayout.astro     # <head>, fonts, KaTeX, header/footer shell, motion bootstrap
+  components/                  # Header, Footer, BrandIcon (CMJ force-time SVG logo), AthleteStage (animation canvas)
+  data/animations.ts           # athlete animation registry (frames / mocap / curve)
+  scripts/                     # motion.ts (Lenis+GSAP), home.ts, article.ts, athlete.ts, frames.ts, mocap.ts
   pages/
-    index.astro                # one-page homepage: hero video → Articles → About
+    index.astro                # one-page homepage: pinned dunk hero → pinned article showcase → About
     impressum.astro            # /impressum — standalone legal notice (subpage style)
     datenschutz.astro          # /datenschutz — privacy policy (DRAFT template, review before publishing)
     blog/index.astro           # /blog full list (.post-card)
-    blog/[...slug].astro       # article view (.prose)
+    blog/[...slug].astro       # article view: athlete header + .prose
     rss.xml.js
-  content/blog/*.md            # the posts
+  content/blog/*.md            # the posts (optional `animation:` frontmatter)
   styles/global.css            # ALL styling + palette tokens
   styles/theme.ts              # palette as TS tokens
-public/                        # dunk.mp4 hero, favicons, /fonts, /vendor/katex, article images
+public/                        # anim/<id>/ frame sequences, favicons, /fonts, /vendor/katex, article images
+scripts/make-frames.mjs        # video clip → public/anim/<id>/ WebP frames
 docs/PALETTE.md                # canonical palette doc
-_source/                       # local-only (gitignored) article manuscripts, not deployed
+_source/                       # local-only (gitignored) article manuscripts + dunk.mp4 source clip, not deployed
 ```
 
 ## Conventions

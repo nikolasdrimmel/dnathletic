@@ -2,6 +2,8 @@
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import AthleteStage from '../../components/AthleteStage.astro';
+import { DEFAULT_ANIMATION } from '../../data/animations';
 
 export const getStaticPaths = (async () => {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -16,48 +18,65 @@ const { Content } = await render(post);
 
 const fmtDate = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+// ~220 words per minute, ignoring markup and LaTeX.
+const words = (post.body ?? '')
+  .replace(/<[^>]+>/g, ' ')
+  .replace(/\$\$[\s\S]*?\$\$|\$[^$\n]*\$/g, ' ')
+  .split(/\s+/)
+  .filter(Boolean).length;
+const readMinutes = Math.max(1, Math.round(words / 220));
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
+  <div class="read-progress" aria-hidden="true"></div>
+
   <article class="article">
-    <div class="wrap wrap--editorial">
-      <a href="/#articles" class="back-link">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
-        Back to all articles
-      </a>
-
-      <header class="article-header">
-        <h1>{post.data.title}</h1>
-        {post.data.subtitle && (
-          <p class="article-subtitle">{post.data.subtitle}</p>
-        )}
-        <div class="post-meta">
-          <time datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
-          {post.data.updatedDate && (
-            <span>· Updated {fmtDate(post.data.updatedDate)}</span>
-          )}
+    <header class="article-hero" data-article-hero>
+      <div class="wrap">
+        <a href="/#articles" class="back-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          Back to all articles
+        </a>
+      </div>
+      <div class="wrap article-hero__grid">
+        <div class="article-hero__text">
+          <h1>{post.data.title}</h1>
+          {post.data.subtitle && <p class="article-subtitle">{post.data.subtitle}</p>}
+          <div class="post-meta">
+            <time datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
+            {post.data.updatedDate && <span>· Updated {fmtDate(post.data.updatedDate)}</span>}
+            <span>· {readMinutes} min read</span>
+          </div>
         </div>
-      </header>
+        <div class="article-hero__visual" style={`view-transition-name: athlete-${post.id}`}>
+          <AthleteStage id={post.data.animation ?? DEFAULT_ANIMATION} eager />
+        </div>
+      </div>
+    </header>
 
+    <div class="wrap wrap--editorial">
       <div class="prose">
         <Content />
       </div>
 
       {post.data.tags.length > 0 && (
-        <div class="tags" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--c-line);">
+        <div class="tags article-tags">
           {post.data.tags.map((t) => <span class="tag">#{t}</span>)}
         </div>
       )}
 
-      <div style="margin-top: 3.5rem; padding: 2rem; background: var(--c-panel); border: 1px solid var(--c-line); border-radius: var(--radius); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div class="article-cta" data-reveal>
         <div>
-          <h4 style="font-size: 1.1rem; margin-bottom: 0.25rem;">DNAthletic Publication</h4>
-          <p style="font-size: 0.9rem; color: var(--c-muted); margin: 0;">Explore more research, articles, and training tech breakdowns.</p>
+          <h4>DNAthletic Publication</h4>
+          <p>Explore more research, articles, and training tech breakdowns.</p>
         </div>
-        <a href="/#articles" class="btn btn--primary">
-          Browse All Articles
-        </a>
+        <a href="/#articles" class="btn btn--primary">Browse All Articles</a>
       </div>
     </div>
   </article>
+
+  <script>
+    import '../../scripts/article';
+  </script>
 </BaseLayout>

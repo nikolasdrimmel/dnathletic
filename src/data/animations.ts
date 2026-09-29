@@ -1,0 +1,68 @@
+// Registry of the athlete animations used by the homepage (hero + article
+// showcase) and the article headers. An article opts in with
+// `animation: <id>` in its frontmatter.
+//
+//   kind 'frames' — a scroll-scrubbed image sequence cut from a video clip
+//                   (see scripts/make-frames.mjs), served from public/anim/<id>/.
+//   kind 'mocap'  — a code-drawn biomechanics figure (src/scripts/mocap.ts).
+//                   Stands in until a photoreal clip exists for the movement;
+//                   swapping to a clip is a one-line change here.
+//   kind 'curve'  — the brand CMJ force–time curve drawing itself; the
+//                   fallback for articles without an `animation`.
+
+export type FramesAnimation = {
+  kind: 'frames';
+  label: string;   // accessible description of the motion
+  count: number;   // frames f001.webp … fNNN.webp
+  width: number;
+  height: number;
+  focusX?: number; // horizontal focal point (0–1) kept in view when cropped
+};
+
+export type MocapAnimation = {
+  kind: 'mocap';
+  label: string;
+  movement: 'back-squat';
+};
+
+export type CurveAnimation = {
+  kind: 'curve';
+  label: string;
+};
+
+export type Animation = FramesAnimation | MocapAnimation | CurveAnimation;
+
+export const DEFAULT_ANIMATION = 'force-curve';
+
+export const animations: Record<string, Animation> = {
+  dunk: {
+    kind: 'frames',
+    label: 'Basketball player performing a dunk',
+    count: 81, // ends while he still hangs on the rim
+    width: 1280,
+    height: 720,
+    focusX: 0.56,
+  },
+  'back-squat': {
+    kind: 'mocap',
+    label: 'Motion-capture figure performing a barbell back squat',
+    movement: 'back-squat',
+  },
+  'force-curve': {
+    kind: 'curve',
+    label: 'Countermovement jump force–time curve',
+  },
+};
+
+export function getAnimation(id: string): Animation {
+  const anim = animations[id];
+  if (!anim) {
+    throw new Error(
+      `Unknown animation "${id}". Add it to src/data/animations.ts (known: ${Object.keys(animations).join(', ')}).`
+    );
+  }
+  return anim;
+}
+
+export const framePath = (id: string, index: number) =>
+  `/anim/${id}/f${String(index).padStart(3, '0')}.webp`;

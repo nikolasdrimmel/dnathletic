@@ -14,6 +14,9 @@ const blog = defineCollection({
     updatedDate: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
+    // Athlete animation id from src/data/animations.ts (homepage showcase +
+    // article header). Omit it and the force–time curve is used instead.
+    animation: z.string().optional(),
   }),
 });
 

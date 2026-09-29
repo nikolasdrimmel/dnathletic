@@ -1,12 +1,14 @@
 ---
 import BrandIcon from './BrandIcon.astro';
 
-// Header with responsive, smooth anchor navigation for the one-page layout
+// Header with smooth anchor navigation for the one-page layout. On the
+// homepage it starts transparent over the hero footage; src/scripts/home.ts
+// toggles `is-over-hero` and highlights the active section link.
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 const prefix = isHome ? '' : '/';
 ---
 
-<header class="site-header">
+<header class:list={['site-header', { 'is-over-hero': isHome }]}>
   <div class="wrap">
     <a href={`${prefix}#home`} class="brand" aria-label="DNAthletic home">
       <BrandIcon size={34} class="brand-icon-img" />
@@ -14,43 +16,9 @@ const prefix = isHome ? '' : '/';
     </a>
 
     <nav class="nav" aria-label="Primary Navigation">
-      <a href={`${prefix}#home`} class="nav-link" data-nav="home">Home</a>
+      <a href={`${prefix}#home`} class:list={['nav-link', { active: isHome }]} data-nav="home">Home</a>
       <a href={`${prefix}#articles`} class="nav-link" data-nav="articles">Articles</a>
       <a href={`${prefix}#about`} class="nav-link" data-nav="about">About</a>
     </nav>
   </div>
 </header>
-
-<script>
-  // Dynamic active link highlighting on scroll for one-page homepage
-  if (window.location.pathname === '/' || window.location.pathname === '') {
-    const navLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-link[data-nav]');
-    const sectionIds = ['home', 'articles', 'about'];
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
-
-    const observerOptions = {
-      root: null,
-      rootMargin: '-20% 0px -70% 0px',
-      threshold: 0,
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.id;
-          navLinks.forEach((link) => {
-            if (link.getAttribute('data-nav') === id) {
-              link.classList.add('active');
-            } else {
-              link.classList.remove('active');
-            }
-          });
-        }
-      });
-    }, observerOptions);
-
-    sections.forEach((sec) => observer.observe(sec));
-  }
-</script>

@@ -5,6 +5,7 @@ description: "Bar velocity turns load prescription into a dynamic, objective met
 pubDate: 2026-09-17
 tags: ["sports-science", "biomechanics", "velocity-based-training", "telemetry"]
 draft: false
+animation: back-squat
 ---
 
 ## The Foundation

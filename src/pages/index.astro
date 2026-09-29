@@ -1,112 +1,129 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AthleteStage from '../components/AthleteStage.astro';
+import { DEFAULT_ANIMATION, framePath } from '../data/animations';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-const fmtDate = (d: Date) =>
-  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+const pad = (n: number) => String(n).padStart(2, '0');
+
+// Bio, split into words for the scroll-linked word-by-word reveal.
+const bioWords =
+  'With DNAthletic, I want to provide a high-quality information source in Strength & Conditioning for ambitious athletes and practitioners in these topics.'.split(
+    ' '
+  );
 ---
 
 <BaseLayout
   title="DNAthletic - Science, Systems & Performance"
   description="A minimalist publication exploring strength science, conditioning, and training technology."
+  preloadImage={framePath('dunk', 1)}
 >
-  <!-- 1. Presenting Dunk Video Hero Section -->
-  <section id="home" class="hero-presentation">
-    <div class="video-stage">
-      <div class="video-ambient-glow" aria-hidden="true"></div>
-      <div class="video-frame">
-        <video
-          src="/dunk.mp4"
-          autoplay
-          loop
-          muted
-          playsinline
-          preload="auto"
-          class="hero-video"
-          aria-label="Basketball player performing a dunk"
-        ></video>
+  <!-- 1. Hero: full-screen dunk, scrubbed by scroll (src/scripts/home.ts) -->
+  <section id="home" class="hero" data-hero data-scroll-flush>
+    <div class="hero__stage">
+      <AthleteStage id="dunk" class="hero__media" eager />
+      <div class="hero__shade" aria-hidden="true"></div>
+      <h1 class="hero__wordmark">DNA<b>thletic</b></h1>
+      <div class="hero__cue" aria-hidden="true">
+        <span>Scroll</span>
+        <i></i>
       </div>
     </div>
   </section>
 
-  <!-- 2. Articles Section (Swiss Editorial Index) -->
-  <section id="articles" class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <h2 class="section-title">Articles</h2>
-        <span class="section-badge">{posts.length} {posts.length === 1 ? 'Article' : 'Articles'}</span>
+  <!-- 2. Articles: pinned showcase — one scroll segment per article -->
+  <section id="articles" class="showcase" data-showcase data-scroll-flush aria-labelledby="articles-title">
+    <div class="showcase__stage">
+      <div class="wrap">
+        <div class="section-head showcase__head">
+          <h2 id="articles-title" class="section-title">Articles</h2>
+        </div>
       </div>
 
       {posts.length > 0 ? (
-        <div class="article-index">
-          {posts.map((post) => (
-            <a href={`/blog/${post.id}/`} class="article-row">
-              <div class="article-row-meta">
-                <time class="article-row-date" datetime={post.data.pubDate.toISOString()}>
-                  {fmtDate(post.data.pubDate)}
-                </time>
-                {post.data.tags.length > 0 && (
-                  <span class="article-row-tag">{post.data.tags[0]}</span>
-                )}
+        <ol class="slides">
+          {posts.map((post, i) => (
+            <li class="slide">
+              <div class="slide__text">
+                <div class="roll">
+                  <p class="slide__num" data-roll>
+                    <span>{pad(i + 1)}</span> / {pad(posts.length)}
+                  </p>
+                </div>
+                <div class="roll">
+                  <h3 class="slide__title" data-roll>
+                    <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                  </h3>
+                </div>
+                <div class="roll">
+                  <a href={`/blog/${post.id}/`} class="btn btn--primary slide__cta" data-roll>
+                    Read article
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  </a>
+                </div>
               </div>
-
-              <div class="article-row-body">
-                <h3 class="article-row-title">{post.data.title}</h3>
-                <p class="article-row-desc">{post.data.description}</p>
+              <div class="slide__visual" style={`view-transition-name: athlete-${post.id}`}>
+                <AthleteStage id={post.data.animation ?? DEFAULT_ANIMATION} />
               </div>
-
-              <div class="article-row-action" aria-hidden="true">
-                <span>Read</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-              </div>
-            </a>
+            </li>
           ))}
-        </div>
+        </ol>
       ) : (
-        <div class="empty-posts">
-          <p>No articles published yet. Articles placed in <code>src/content/blog/</code> will appear here automatically.</p>
+        <div class="wrap">
+          <p class="empty-posts">No articles published yet. Articles placed in <code>src/content/blog/</code> will appear here automatically.</p>
         </div>
       )}
     </div>
   </section>
 
-  <!-- 3. About Me Section (Personal Profile) -->
-  <section id="about" class="section">
+  <!-- 3. About Me -->
+  <section id="about" class="section about" data-about aria-labelledby="about-title">
     <div class="wrap">
       <div class="section-head">
-        <h2 class="section-title">About Me</h2>
+        <h2 id="about-title" class="section-title">About Me</h2>
       </div>
 
       <div class="about-me">
         <div class="about-me__profile">
-          <img
-            src="/images/about/nikolas.png"
-            alt="Nikolas Drimmel"
-            class="about-me__photo"
-            width="200"
-            height="200"
-            loading="lazy"
-          />
-          <div class="about-me__id">
-            <span class="about-me__title">Sport Student</span>
-            <span class="about-me__cred">B.Sc. Sport and Performance Student</span>
-            <span class="about-me__cred">German Sports University Cologne</span>
+          <div class="about-me__photo-wrap">
+            <svg class="about-me__ring" viewBox="0 0 100 100" aria-hidden="true">
+              <circle class="about-me__ring-track" cx="50" cy="50" r="48.5" />
+              <circle class="about-me__ring-progress" cx="50" cy="50" r="48.5" pathLength="100" />
+            </svg>
+            <img
+              src="/images/about/nikolas.png"
+              alt="Nikolas Drimmel"
+              class="about-me__photo"
+              width="240"
+              height="240"
+              loading="lazy"
+            />
           </div>
+          <ul class="about-me__id">
+            <li class="about-me__title" data-cred>Sport Student</li>
+            <li class="about-me__cred" data-cred>B.Sc. Sport and Performance Student</li>
+            <li class="about-me__cred" data-cred>German Sports University Cologne</li>
+          </ul>
         </div>
 
-        <div class="about-me__bio">
-          <p>
-            With <strong>DNAthletic</strong>, I want to provide a high-quality
-            information source in Strength &amp; Conditioning for ambitious athletes
-            and practitioners in these topics.
-          </p>
-        </div>
+        <p class="about-me__bio">
+          {bioWords.map((word) =>
+            word.startsWith('DNAthletic') ? (
+              <span class="w"><strong>DNAthletic</strong>{word.slice('DNAthletic'.length)} </span>
+            ) : (
+              <span class="w">{word} </span>
+            )
+          )}
+        </p>
       </div>
     </div>
   </section>
 
+  <script>
+    import '../scripts/home';
+  </script>
 </BaseLayout>

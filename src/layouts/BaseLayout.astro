@@ -6,11 +6,13 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  preloadImage?: string; // above-the-fold image to fetch early (homepage hero frame)
 }
 
 const {
   title = 'DNAthletic',
   description = 'Strength, conditioning, and the technology behind how we train.',
+  preloadImage,
 } = Astro.props;
 
 const fullTitle = title.includes('DNAthletic') ? title : `${title} - DNAthletic`;
@@ -55,6 +57,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 
     <!-- KaTeX math CSS for LaTeX rendering — self-hosted (matches installed katex 0.18.7) -->
     <link rel="stylesheet" href="/vendor/katex/katex.min.css" />
+
+    {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
   </head>
   <body class="notranslate">
     <Header />
@@ -62,5 +66,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
       <slot />
     </main>
     <Footer />
+
+    <!-- Lenis smooth scroll + GSAP ScrollTrigger, anchor links, reveals -->
+    <script>
+      import '../scripts/motion';
+    </script>
   </body>
 </html>
