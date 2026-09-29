@@ -3,7 +3,7 @@
 //   2. Articles — pinned; each article gets a scroll segment that plays its
 //                 athlete animation, then crossfades/rolls to the next one.
 //   3. About   — gold ring draw, word-by-word bio, staggered credentials,
-//                 photo parallax + pointer tilt.
+//                 photo parallax.
 // Under prefers-reduced-motion nothing pins: static frames, plain list.
 
 import { gsap, ScrollTrigger, reducedMotion, syncHashScroll } from './motion';
@@ -133,7 +133,6 @@ function initAbout() {
   root.classList.add('is-animated');
 
   const photoWrap = root.querySelector<HTMLElement>('.about-me__photo-wrap')!;
-  const photo = root.querySelector<HTMLElement>('.about-me__photo')!;
   const bio = root.querySelector<HTMLElement>('.about-me__bio')!;
 
   // About sits right above the footer, so the page may end before these
@@ -173,23 +172,6 @@ function initAbout() {
     { y: 36 },
     { y: -36, ease: 'none', scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: true } }
   );
-
-  // Pointer tilt toward the cursor (mouse / trackpad only).
-  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    const rotX = gsap.quickTo(photo, 'rotationX', { duration: 0.8, ease: 'power3' });
-    const rotY = gsap.quickTo(photo, 'rotationY', { duration: 0.8, ease: 'power3' });
-    root.addEventListener('pointermove', (e) => {
-      const r = photoWrap.getBoundingClientRect();
-      const dx = (e.clientX - (r.left + r.width / 2)) / window.innerWidth;
-      const dy = (e.clientY - (r.top + r.height / 2)) / window.innerHeight;
-      rotY(gsap.utils.clamp(-14, 14, dx * 36));
-      rotX(gsap.utils.clamp(-14, 14, -dy * 36));
-    });
-    root.addEventListener('pointerleave', () => {
-      rotX(0);
-      rotY(0);
-    });
-  }
 }
 
 // Highlight the nav link of the section in the middle of the viewport.
