@@ -1102,6 +1102,28 @@ a:hover {
   font-weight: 600;
 }
 
+/* Hover "exhale": the bio's tracking opens up. letter-spacing also adds a
+   phantom space after the last letter, so margin-right cancels it — both read
+   the same animated --track, so they move in lockstep. Mouse users on the
+   two-column layout only. */
+@property --track {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 769px) {
+  .about-me__bio {
+    --track: -0.025em;
+    letter-spacing: var(--track);
+    margin-right: calc(-1 * var(--track));
+    transition: --track 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .about-me__bio:hover {
+    --track: 0.035em;
+  }
+}
+
 /* Phone: photo + credentials on top, bio underneath, all centered */
 @media (max-width: 768px) {
   .about-me {
