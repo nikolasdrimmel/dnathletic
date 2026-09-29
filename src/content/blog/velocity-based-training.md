@@ -16,6 +16,8 @@ Velocity-Based Training (VBT) is grounded in the methodology of performing every
   <img
     src="/images/articles/velocity-based-training/fig1-load-velocity-relationship.png"
     alt="Relationship between relative load and mean propulsive velocity in the bench press"
+    width="695"
+    height="663"
     loading="lazy"
   />
   <figcaption>
@@ -27,37 +29,33 @@ As intensity increases, peak and mean velocity decrease predictably &mdash; a re
 
 In the bench press, the relationship between Mean Propulsive Velocity ($\text{MPV}$) and relative intensity ($\text{Load}$ as $\%1\text{RM}$) is governed by the second-order polynomial regression:
 
+<div class="math-panel">
+<div class="math-label">Load–velocity relationship (bench press)</div>
+
 $$
 \text{MPV}_{(\text{m}\cdot\text{s}^{-1})} = 0.00003 \cdot \text{Load}^2 - 0.0204 \cdot \text{Load} + 1.889
 $$
 
-<figure class="figure-card">
-  <img
-    src="/images/articles/velocity-based-training/formula-mpv-card.png"
-    alt="Load-Velocity Relationship polynomial model equation card"
-    loading="lazy"
-  />
-  <figcaption>
-    <strong>Model Equation</strong> &mdash; Second-order polynomial regression ($R^2 = 0.98$, $\text{SEE} = 0.06\text{ m}\cdot\text{s}^{-1}$, $N = 1{,}596$) relating bar speed in $\text{m}\cdot\text{s}^{-1}$ to relative intensity (% 1RM).
-  </figcaption>
-</figure>
+<div class="math-caption"><span><strong>MPV</strong> &mdash; Mean Propulsive Velocity (m·s⁻¹)</span><span><strong>Load</strong> &mdash; percentage of one repetition maximum (%1RM)</span></div>
+
+**Model Equation** &mdash; Second-order polynomial regression ($R^2 = 0.98$, $\text{SEE} = 0.06\text{ m}\cdot\text{s}^{-1}$, $N = 1{,}596$) relating bar speed in $\text{m}\cdot\text{s}^{-1}$ to relative intensity (% 1RM).
+
+</div>
 
 Solving this quadratic model for $\text{Load}$ allows the instantaneous calculation of the athlete's current training intensity from a single measured repetition:
+
+<div class="math-panel">
+<div class="math-label">Load from bar velocity (bench press)</div>
 
 $$
 \text{Load}_{(\%1\text{RM})} = \frac{0.0204 - \sqrt{0.0204^2 - 4 \cdot 0.00003 \cdot (1.889 - \text{MPV})}}{2 \cdot 0.00003}
 $$
 
-<figure class="figure-card">
-  <img
-    src="/images/articles/velocity-based-training/formula-load-card.png"
-    alt="Inverse quadratic formula solving for relative load from mean propulsive velocity"
-    loading="lazy"
-  />
-  <figcaption>
-    <strong>Inverse Resolution</strong> &mdash; Directly solves for daily $1\text{RM}$ load percentage based on measured concentric speed, eliminating the requirement for true maximum effort testing.
-  </figcaption>
-</figure>
+<div class="math-caption"><span><strong>MPV</strong> &mdash; Mean Propulsive Velocity (m·s⁻¹)</span><span><strong>Load</strong> &mdash; percentage of one repetition maximum (%1RM)</span></div>
+
+**Inverse Resolution** &mdash; Directly solves for daily $1\text{RM}$ load percentage based on measured concentric speed, eliminating the requirement for true maximum effort testing.
+
+</div>
 
 The $1\text{RM}$ is by nature a dynamic value, shifting over time through genuine strength progression or simple daily variation in readiness. This is precisely what makes velocity-based estimation so valuable. Rather than treating the $1\text{RM}$ as a fixed reference point tested periodically, it can be tracked continuously and adjusted to reflect the athlete's actual capacity on any given day, making load prescription both more accurate and more responsive.
 
@@ -74,6 +72,8 @@ Beyond simple $1\text{RM}$ estimation, the use cases of tracking velocity extend
   <img
     src="/images/articles/velocity-based-training/fig2-velocity-loss-repetitions.png"
     alt="Velocity loss decay curve across set repetitions terminating at target threshold"
+    width="1209"
+    height="582"
     loading="lazy"
   />
   <figcaption>
@@ -135,6 +135,8 @@ The practical utility of velocity-based training depends entirely on the accurac
   <img
     src="/images/articles/velocity-based-training/fig3-vbt-modalities.png"
     alt="Four commercial VBT modalities: Linear Transducers, Accelerometers, Optic Laser Devices, and Smartphone Applications"
+    width="1206"
+    height="408"
     loading="lazy"
   />
   <figcaption>

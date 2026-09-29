@@ -42,8 +42,8 @@ Every session, before proposing or making changes, read:
 ## Scroll experience & athlete animations
 
 - **Homepage** (`src/scripts/home.ts`): ① `#home` hero is pinned and scroll scrubs the dunk frame sequence while the "DNAthletic" wordmark fades out; ② `#articles` is pinned — each article gets a scroll segment (1.25 screens) that plays its athlete animation, then crossfades + text-rolls to the next; ③ `#about`: gold ring draw, word-by-word bio, staggered credentials, photo parallax (no cursor tilt — the user disliked it).
-- **Article pages** (`src/scripts/article.ts`): header with the article's athlete animation (pinned briefly on large screens), gold reading-progress bar. Cross-page CSS view transitions morph the athlete between showcase and article (`view-transition-name: athlete-<slug>`).
-- **Animations registry:** `src/data/animations.ts`. An article opts in with `animation: <id>` in its frontmatter; without it the brand force–time curve (`force-curve`) is used. Kinds: `frames` (WebP sequence in `public/anim/<id>/`), `mocap` (code-drawn figure, `src/scripts/mocap.ts`), `curve`.
+- **Article pages** (`src/scripts/article.ts`): text-only header (the user removed the athlete animation there), gold reading-progress bar. Equations are live KaTeX — as a titled card use `<div class="math-panel">` with `.math-label`, the `$$…$$` block and a `.math-caption` legend (blank lines around the math so Markdown still parses it); don't use formula screenshots.
+- **Animations registry:** `src/data/animations.ts`. An article's `animation: <id>` frontmatter picks its homepage-showcase animation; without it the brand force–time curve (`force-curve`) is used. Kinds: `frames` (WebP sequence in `public/anim/<id>/`), `mocap` (code-drawn figure, `src/scripts/mocap.ts`), `curve`.
 - **New clip → animation:** `node scripts/make-frames.mjs <clip.mp4> <id>` (needs ffmpeg), paste the printed entry into `animations.ts`, set `animation: <id>` on the post. Clips should have a locked camera, one complete rep, and dark edges (they're feathered into the page). Higgsfield is connected but the account is on the free plan, which blocks the video/image models used so far.
 - `back-squat` (VBT article) is a photoreal Gemini clip shot on **green screen**, keyed to transparent WebP (`transparent: true` → fitted whole, no edge feather) with a measured bar-velocity HUD (`telemetry: true` → `public/anim/<id>/telemetry.json`, see `src/scripts/hud.ts`). For new clips ask for a plain green-screen background — a "transparent" checkerboard from AI tools is baked-in pixels and very hard to remove. The code-drawn fallback remains as `back-squat-mocap`.
 - **Reduced motion:** no Lenis, no pinning, static frames, plain list, no view transitions. Keep that path working.
@@ -112,7 +112,7 @@ src/
     impressum.astro            # /impressum — standalone legal notice (subpage style)
     datenschutz.astro          # /datenschutz — privacy policy (DRAFT template, review before publishing)
     blog/index.astro           # /blog full list (.post-card)
-    blog/[...slug].astro       # article view: athlete header + .prose
+    blog/[...slug].astro       # article view: text header + .prose
     rss.xml.js
   content/blog/*.md            # the posts (optional `animation:` frontmatter)
   styles/global.css            # ALL styling + palette tokens
