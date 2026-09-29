@@ -1002,9 +1002,11 @@ a:hover {
   height: 100%;
   object-fit: cover;
   object-position: center top;
-  /* Transparent cutout straight on the page; shoulders fade out at the bottom. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 96%);
-  mask-image: linear-gradient(to bottom, #000 62%, transparent 96%);
+  /* Transparent cutout clipped to a circle inside the gold ring (no disc,
+     no border); only the last few pixels at the bottom soften. */
+  border-radius: 50%;
+  -webkit-mask-image: linear-gradient(to bottom, #000 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 88%, transparent 100%);
   will-change: transform;
 }
 
