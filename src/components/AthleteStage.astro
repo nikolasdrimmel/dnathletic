@@ -12,14 +12,18 @@ interface Props {
 const { id, class: className = '', eager = false } = Astro.props;
 const anim = getAnimation(id);
 const focus = anim.kind === 'frames' ? (anim.focusX ?? 0.5) : 0.5;
+const transparent = anim.kind === 'frames' && anim.transparent;
+const telemetry = anim.kind === 'frames' && anim.telemetry;
 ---
 
 <div
-  class:list={['athlete', `athlete--${anim.kind}`, className]}
+  class:list={['athlete', `athlete--${anim.kind}`, { 'athlete--transparent': transparent }, className]}
   data-athlete={id}
   data-kind={anim.kind}
   data-count={anim.kind === 'frames' ? anim.count : undefined}
   data-focus={anim.kind === 'frames' ? focus : undefined}
+  data-fit={transparent ? 'contain' : undefined}
+  data-telemetry={telemetry ? '' : undefined}
   role="img"
   aria-label={anim.label}
 >
@@ -30,7 +34,7 @@ const focus = anim.kind === 'frames' ? (anim.focusX ?? 0.5) : 0.5;
       alt=""
       width={anim.width}
       height={anim.height}
-      style={`object-position: ${focus * 100}% 50%`}
+      style={transparent ? 'object-fit: contain' : `object-position: ${focus * 100}% 50%`}
       loading={eager ? 'eager' : 'lazy'}
       fetchpriority={eager ? 'high' : undefined}
       decoding="async"
@@ -48,5 +52,5 @@ const focus = anim.kind === 'frames' ? (anim.focusX ?? 0.5) : 0.5;
   ) : (
     <canvas class="athlete__canvas" aria-hidden="true"></canvas>
   )}
-  {anim.kind === 'mocap' && <div class="mocap-hud" aria-hidden="true"></div>}
+  {(anim.kind === 'mocap' || telemetry) && <div class="mocap-hud" aria-hidden="true"></div>}
 </div>

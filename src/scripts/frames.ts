@@ -12,6 +12,7 @@ type Options = {
   id: string;
   count: number;
   focusX: number;            // horizontal focal point kept in view when cropping
+  fit?: 'cover' | 'contain'; // contain: transparent clips shown whole
   onFirstFrame?: () => void;
 };
 
@@ -100,12 +101,13 @@ export class FrameSequence implements Player {
     const { width: cw, height: ch } = this.canvas;
     if (!cw || !ch) return;
 
-    // object-fit: cover, keeping focusX in view.
+    // object-fit: cover (keeping focusX in view) or contain.
     const img = this.frames[i]!;
-    const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+    const contain = this.opts.fit === 'contain';
+    const scale = (contain ? Math.min : Math.max)(cw / img.naturalWidth, ch / img.naturalHeight);
     const dw = img.naturalWidth * scale;
     const dh = img.naturalHeight * scale;
-    const dx = Math.min(0, Math.max(cw - dw, cw / 2 - this.opts.focusX * dw));
+    const dx = contain ? (cw - dw) / 2 : Math.min(0, Math.max(cw - dw, cw / 2 - this.opts.focusX * dw));
     const dy = (ch - dh) / 2;
 
     this.ctx.clearRect(0, 0, cw, ch);

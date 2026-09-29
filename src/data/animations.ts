@@ -17,6 +17,8 @@ export type FramesAnimation = {
   width: number;
   height: number;
   focusX?: number; // horizontal focal point (0–1) kept in view when cropped
+  transparent?: boolean; // alpha frames: fit whole (contain), no edge feathering
+  telemetry?: boolean; // public/anim/<id>/telemetry.json drives the velocity HUD
 };
 
 export type MocapAnimation = {
@@ -43,7 +45,19 @@ export const animations: Record<string, Animation> = {
     height: 720,
     focusX: 0.56,
   },
+  // Gemini clip on green screen, keyed to transparent WebP; velocity measured
+  // from the bar path in the video (plate diameter = 0.45 m).
   'back-squat': {
+    kind: 'frames',
+    label: 'Athlete performing a barbell back squat',
+    count: 72,
+    width: 768,
+    height: 768,
+    transparent: true,
+    telemetry: true,
+  },
+  // Code-drawn fallback for the squat (kept for future movements/articles).
+  'back-squat-mocap': {
     kind: 'mocap',
     label: 'Motion-capture figure performing a barbell back squat',
     movement: 'back-squat',

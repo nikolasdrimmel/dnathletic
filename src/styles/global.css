@@ -347,7 +347,7 @@ a:hover {
 }
 
 /* Photoreal clips outside the hero dissolve into the page on every edge. */
-.athlete--frames:not(.hero__media) {
+.athlete--frames:not(.hero__media):not(.athlete--transparent) {
   -webkit-mask-image:
     linear-gradient(to bottom, transparent 0%, #000 14%, #000 80%, transparent 100%),
     linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
@@ -480,7 +480,17 @@ a:hover {
   color: var(--c-gold);
 }
 
+/* Photoreal clips fill the frame top-right with the plate; sit beside the feet. */
+.athlete--transparent .mocap-hud {
+  top: auto;
+  bottom: 0.5rem;
+}
+
 @media (max-width: 768px) {
+  .athlete--transparent .mocap-hud {
+    top: auto;
+    bottom: 0;
+  }
   .mocap-hud {
     top: 0.25rem;
     right: 0;
