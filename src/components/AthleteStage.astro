@@ -24,6 +24,7 @@ const telemetry = anim.kind === 'frames' && anim.telemetry;
   data-focus={anim.kind === 'frames' ? focus : undefined}
   data-fit={transparent ? 'contain' : undefined}
   data-telemetry={telemetry ? '' : undefined}
+  data-span={anim.kind === 'frames' && anim.span ? anim.span.join(',') : undefined}
   role="img"
   aria-label={anim.label}
 >

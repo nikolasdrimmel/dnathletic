@@ -34,11 +34,14 @@ export function mountAthlete(el: HTMLElement, { eager = false, still }: MountOpt
       el.querySelector('.mocap-hud')?.remove();
       return { render() {} };
     }
+    const hudRoot = el.querySelector<HTMLElement>('.mocap-hud');
     const seq = new FrameSequence(canvas, {
       id: el.dataset.athlete!,
       count,
       focusX: Number(el.dataset.focus ?? 0.5),
       fit: el.dataset.fit === 'contain' ? 'contain' : 'cover',
+      span: el.dataset.span ? (el.dataset.span.split(',').map(Number) as [number, number]) : undefined,
+      avoid: hudRoot ?? undefined,
       onFirstFrame: () => el.classList.add('is-ready'),
     });
     if (eager) {
@@ -58,7 +61,6 @@ export function mountAthlete(el: HTMLElement, { eager = false, still }: MountOpt
     }
 
     // Measured bar-velocity HUD (loaded alongside the frames).
-    const hudRoot = el.querySelector<HTMLElement>('.mocap-hud');
     if (hudRoot && el.dataset.telemetry !== undefined) {
       let hud: RepHud | null = null;
       let last = 0;

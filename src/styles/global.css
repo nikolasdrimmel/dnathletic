@@ -346,6 +346,11 @@ a:hover {
   object-fit: cover;
 }
 
+/* Transparent frames don't cover the poster — drop it once the canvas draws. */
+.athlete--transparent.is-ready .athlete__poster {
+  visibility: hidden;
+}
+
 /* Photoreal clips outside the hero dissolve into the page on every edge. */
 .athlete--frames:not(.hero__media):not(.athlete--transparent) {
   -webkit-mask-image:
@@ -480,16 +485,33 @@ a:hover {
   color: var(--c-gold);
 }
 
-/* Photoreal clips fill the frame top-right with the plate; sit beside the feet. */
+/* Photoreal clips: a more compact readout in the top-right corner, above the plate. */
 .athlete--transparent .mocap-hud {
-  top: auto;
-  bottom: 0.5rem;
+  top: 0;
+  right: 0;
+  width: 9rem;
+  padding: 0.65rem 0.75rem 0.6rem;
+  gap: 0.25rem;
+}
+
+.athlete--transparent .mocap-hud__value b {
+  font-size: 1.35rem;
+}
+
+.athlete--transparent .mocap-hud__spark {
+  height: 28px;
 }
 
 @media (max-width: 768px) {
   .athlete--transparent .mocap-hud {
-    top: auto;
-    bottom: 0;
+    width: 7.5rem;
+    padding: 0.5rem 0.6rem;
+  }
+  .athlete--transparent .mocap-hud__value b {
+    font-size: 1.1rem;
+  }
+  .athlete--transparent .mocap-hud__spark {
+    height: 22px;
   }
   .mocap-hud {
     top: 0.25rem;

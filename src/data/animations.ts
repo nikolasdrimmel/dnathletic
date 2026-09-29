@@ -19,6 +19,7 @@ export type FramesAnimation = {
   focusX?: number; // horizontal focal point (0–1) kept in view when cropped
   transparent?: boolean; // alpha frames: fit whole (contain), no edge feathering
   telemetry?: boolean; // public/anim/<id>/telemetry.json drives the velocity HUD
+  span?: [number, number]; // transparent: horizontal extent (0–1) of the athlete across all frames
 };
 
 export type MocapAnimation = {
@@ -55,6 +56,7 @@ export const animations: Record<string, Animation> = {
     height: 768,
     transparent: true,
     telemetry: true,
+    span: [0.15, 0.91],
   },
   // Code-drawn fallback for the squat (kept for future movements/articles).
   'back-squat-mocap': {
