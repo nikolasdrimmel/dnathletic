@@ -1441,6 +1441,8 @@ a:hover {
   object-fit: cover;
   border-radius: 50%;
   border: 2px solid var(--c-gold);
+  /* Transparent gap between the gold ring and the photo. */
+  padding: 4px;
 }
 
 .modality figcaption {
