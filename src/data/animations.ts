@@ -55,6 +55,17 @@ export const animations: Record<string, Animation> = {
     transparent: true,
     span: [0.15, 0.91],
   },
+  // Line-art Viking snatch on transparent WebP (scripts/generate_viking_frames.py,
+  // source clip in _source/).
+  'viking-snatch': {
+    kind: 'frames',
+    label: 'Viking athlete performing a barbell snatch',
+    count: 96,
+    width: 768,
+    height: 768,
+    transparent: true,
+    span: [0.178, 0.822],
+  },
   // Code-drawn fallback for the squat (kept for future movements/articles).
   'back-squat-mocap': {
     kind: 'mocap',
