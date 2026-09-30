@@ -8,10 +8,10 @@ node_modules/
 # astro generated types & cache
 .astro/
 
-# environment variables
-.env
-.env.production
-.env.*.local
+# environment variables / local secrets (any variant)
+.env*
+!.env.example
+.dev.vars*
 
 # logs
 npm-debug.log*

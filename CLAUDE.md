@@ -32,9 +32,9 @@ Every session, before proposing or making changes, read:
 
 ## Stack
 
-- **Astro 5** static site, hand-built (no template/UI framework).
+- **Astro 7** static site, hand-built (no template/UI framework). Markdown runs on the `unified` processor from `@astrojs/markdown-remark` (set in `astro.config.mjs`), because Astro 7's default Sätteri processor doesn't run the remark/rehype math plugins.
 - Posts are **Markdown** in `src/content/blog/` via a content collection (schema in `src/content.config.ts`).
-- **KaTeX** for LaTeX math (`remark-math` + `rehype-katex`); KaTeX assets are **self-hosted** in `public/vendor/katex/` (matches installed `katex@0.18.7` — do not re-add a CDN link).
+- **KaTeX** for LaTeX math (`remark-math` + `rehype-katex`); KaTeX assets are **self-hosted** in `public/vendor/katex/` (matches installed `katex@0.18.9` — do not re-add a CDN link). `package.json` `overrides` pins every KaTeX copy (incl. rehype-katex's) to that same version, so the rendered markup and the self-hosted CSS always match — when bumping KaTeX, copy `node_modules/katex/dist/katex.min.css` + `fonts/*.woff2` into `public/vendor/katex/`.
 - Fonts are **self-hosted** in `public/fonts/` (`fonts.css` + woff2). Do not re-add Google Fonts `<link>`s.
 - RSS (`src/pages/rss.xml.js`) + sitemap (`@astrojs/sitemap`).
 - **Scroll engine:** `gsap` (+ `ScrollTrigger`) and `lenis` from npm, bundled by Vite — no CDN (~51 KB gzipped). Bootstrapped once per page in `src/scripts/motion.ts`.
@@ -128,4 +128,5 @@ _source/                       # local-only (gitignored) article manuscripts + d
 - Keep the strict palette + font roles. Match the surrounding code's style and density.
 - Article images live in `public/images/articles/<slug>/`; reference only what's used (no raw dumps).
 - Don't add dependencies or external CDN calls without asking — fonts and KaTeX are deliberately self-hosted.
+- **Security headers** live in `public/_headers` (served by the Cloudflare Worker's static assets): a strict Content-Security-Policy (`'self'` only, no inline scripts or `<style>` elements, inline `style=""` attributes allowed), HSTS, nosniff, no framing. Anything new from another origin (embed, analytics, font, image) or an inline `<script>` will be **blocked** until the CSP is updated — check the browser console for CSP errors after such changes. The HTTP→HTTPS redirect itself is a Cloudflare dashboard setting ("Always Use HTTPS").
 - New posts: add a `.md` to `src/content/blog/` with frontmatter matching the schema (`title`, `description`, `pubDate`, optional `subtitle`/`updatedDate`/`tags`/`draft`).

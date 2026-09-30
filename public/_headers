@@ -1,0 +1,14 @@
+# Security headers for every response (Cloudflare Workers static assets).
+# The site loads nothing from other origins: scripts, styles, fonts, images and
+# KaTeX are all self-hosted. Inline style *attributes* are allowed because
+# KaTeX's rendered math and the athlete posters use them; <style> elements and
+# inline scripts are not. Older browsers without style-src-attr fall back to
+# style-src.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-elem 'self'; style-src-attr 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=15552000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
