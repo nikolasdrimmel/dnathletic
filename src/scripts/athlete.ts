@@ -4,7 +4,6 @@
 import { framePath } from '../data/animations';
 import { FrameSequence, type Player } from './frames';
 import { MocapSquat } from './mocap';
-import { RepHud, type Telemetry } from './hud';
 
 export type { Player };
 
@@ -31,17 +30,14 @@ export function mountAthlete(el: HTMLElement, { eager = false, still }: MountOpt
       // One representative still instead of downloading the whole sequence.
       const poster = el.querySelector<HTMLImageElement>('.athlete__poster');
       if (poster) poster.src = framePath(el.dataset.athlete!, Math.round(still * (count - 1)) + 1);
-      el.querySelector('.mocap-hud')?.remove();
       return { render() {} };
     }
-    const hudRoot = el.querySelector<HTMLElement>('.mocap-hud');
     const seq = new FrameSequence(canvas, {
       id: el.dataset.athlete!,
       count,
       focusX: Number(el.dataset.focus ?? 0.5),
       fit: el.dataset.fit === 'contain' ? 'contain' : 'cover',
       span: el.dataset.span ? (el.dataset.span.split(',').map(Number) as [number, number]) : undefined,
-      avoid: hudRoot ?? undefined,
       onFirstFrame: () => el.classList.add('is-ready'),
     });
     if (eager) {
@@ -58,26 +54,6 @@ export function mountAthlete(el: HTMLElement, { eager = false, still }: MountOpt
         { rootMargin: '100% 0px' }
       );
       io.observe(el);
-    }
-
-    // Measured bar-velocity HUD (loaded alongside the frames).
-    if (hudRoot && el.dataset.telemetry !== undefined) {
-      let hud: RepHud | null = null;
-      let last = 0;
-      fetch(`/anim/${el.dataset.athlete}/telemetry.json`)
-        .then((r) => r.json())
-        .then((t: Telemetry) => {
-          hud = new RepHud(hudRoot, t);
-          hud.render(last);
-        })
-        .catch(() => hudRoot.remove());
-      return {
-        render(p) {
-          last = p;
-          seq.render(p);
-          hud?.render(p);
-        },
-      };
     }
     return seq;
   }

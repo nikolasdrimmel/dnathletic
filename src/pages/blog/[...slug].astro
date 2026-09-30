@@ -37,7 +37,7 @@ const readMinutes = Math.max(1, Math.round(words / 220));
           Back to all articles
         </a>
         <h1>{post.data.title}</h1>
-        {post.data.subtitle && <p class="article-subtitle">{post.data.subtitle}</p>}
+        {post.data.subtitle && <p class="article-subtitle article-subtitle--caps">{post.data.subtitle}</p>}
         <div class="post-meta">
           <time datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
           {post.data.updatedDate && <span>· Updated {fmtDate(post.data.updatedDate)}</span>}
@@ -51,18 +51,8 @@ const readMinutes = Math.max(1, Math.round(words / 220));
         <Content />
       </div>
 
-      {post.data.tags.length > 0 && (
-        <div class="tags article-tags">
-          {post.data.tags.map((t) => <span class="tag">#{t}</span>)}
-        </div>
-      )}
-
-      <div class="article-cta" data-reveal>
-        <div>
-          <h4>DNAthletic Publication</h4>
-          <p>Explore more research, articles, and training tech breakdowns.</p>
-        </div>
-        <a href="/#articles" class="btn btn--primary">Browse All Articles</a>
+      <div class="article-return" data-reveal>
+        <a href="/#articles" class="btn btn--primary">Return to articles</a>
       </div>
     </div>
   </article>

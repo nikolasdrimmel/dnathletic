@@ -14,7 +14,6 @@ type Options = {
   focusX: number;            // horizontal focal point kept in view when cropping
   fit?: 'cover' | 'contain'; // contain: transparent clips shown whole
   span?: [number, number];   // contain: horizontal extent of the subject in the frame
-  avoid?: HTMLElement;       // contain: overlay in the top-right corner the subject must clear
   onFirstFrame?: () => void;
 };
 
@@ -106,22 +105,17 @@ export class FrameSequence implements Player {
     // object-fit: cover (keeping focusX in view) or contain.
     const img = this.frames[i]!;
     const contain = this.opts.fit === 'contain';
-    let scale = (contain ? Math.min : Math.max)(cw / img.naturalWidth, ch / img.naturalHeight);
-    let dx = 0;
-    if (contain) {
-      // Keep the subject left of the overlay: use the empty margins first,
-      // shrink only as much as still needed.
-      const [s0, s1] = this.opts.span ?? [0, 1];
-      const avoid = this.opts.avoid;
-      const px = cw / (this.canvas.clientWidth || cw);
-      const room = avoid?.isConnected ? cw - (avoid.offsetWidth + 8) * px : cw;
-      scale *= Math.min(1, room / ((s1 - s0) * img.naturalWidth * scale));
-      const subject = (s1 - s0) * img.naturalWidth * scale;
-      dx = Math.max(0, Math.min((cw - subject) / 2, room - subject)) - s0 * img.naturalWidth * scale;
-    }
+    const scale = (contain ? Math.min : Math.max)(cw / img.naturalWidth, ch / img.naturalHeight);
     const dw = img.naturalWidth * scale;
     const dh = img.naturalHeight * scale;
-    if (!contain) dx = Math.min(0, Math.max(cw - dw, cw / 2 - this.opts.focusX * dw));
+    let dx: number;
+    if (contain) {
+      // Centre the subject itself, not the frame around it.
+      const [s0, s1] = this.opts.span ?? [0, 1];
+      dx = (cw - (s0 + s1) * dw) / 2;
+    } else {
+      dx = Math.min(0, Math.max(cw - dw, cw / 2 - this.opts.focusX * dw));
+    }
     const dy = (ch - dh) / 2;
 
     this.ctx.clearRect(0, 0, cw, ch);

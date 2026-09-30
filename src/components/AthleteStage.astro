@@ -13,7 +13,6 @@ const { id, class: className = '', eager = false } = Astro.props;
 const anim = getAnimation(id);
 const focus = anim.kind === 'frames' ? (anim.focusX ?? 0.5) : 0.5;
 const transparent = anim.kind === 'frames' && anim.transparent;
-const telemetry = anim.kind === 'frames' && anim.telemetry;
 ---
 
 <div
@@ -23,7 +22,6 @@ const telemetry = anim.kind === 'frames' && anim.telemetry;
   data-count={anim.kind === 'frames' ? anim.count : undefined}
   data-focus={anim.kind === 'frames' ? focus : undefined}
   data-fit={transparent ? 'contain' : undefined}
-  data-telemetry={telemetry ? '' : undefined}
   data-span={anim.kind === 'frames' && anim.span ? anim.span.join(',') : undefined}
   role="img"
   aria-label={anim.label}
@@ -53,5 +51,5 @@ const telemetry = anim.kind === 'frames' && anim.telemetry;
   ) : (
     <canvas class="athlete__canvas" aria-hidden="true"></canvas>
   )}
-  {(anim.kind === 'mocap' || telemetry) && <div class="mocap-hud" aria-hidden="true"></div>}
+  {anim.kind === 'mocap' && <div class="mocap-hud" aria-hidden="true"></div>}
 </div>

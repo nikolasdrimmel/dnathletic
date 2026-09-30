@@ -59,7 +59,7 @@ export function syncHashScroll() {
 }
 
 // Subtle one-time fade-up for [data-reveal] plus article figures/equation panels.
-const revealTargets = document.querySelectorAll<HTMLElement>('[data-reveal], .prose .figure-card, .prose .math-panel');
+const revealTargets = document.querySelectorAll<HTMLElement>('[data-reveal], .prose .math-panel, .prose .modalities');
 if (revealTargets.length && !reducedMotion && 'IntersectionObserver' in window) {
   document.documentElement.classList.add('has-reveal');
   const io = new IntersectionObserver(

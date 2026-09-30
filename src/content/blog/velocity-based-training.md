@@ -1,6 +1,6 @@
 ---
-title: "Velocity-Based Training: Hype or Future?"
-subtitle: "A scientific and practical analysis of load-velocity profiling, fatigue management, and sensor telemetry."
+title: "Velocity-Based Training"
+subtitle: "Hype or Future?"
 description: "Bar velocity turns load prescription into a dynamic, objective metric. Explore the biomechanical foundation, mathematical models, neuromuscular evidence, and device accuracy."
 pubDate: 2026-09-17
 tags: ["sports-science", "biomechanics", "velocity-based-training", "telemetry"]
@@ -12,17 +12,23 @@ animation: back-squat
 
 Velocity-Based Training (VBT) is grounded in the methodology of performing every concentric repetition with maximal intentional speed. Central to this is the near-linear inverse relationship between the maximal velocity achievable on a lift and its relative load expressed as a percentage of the one repetition maximum ($1\text{RM}$) [[1]](#ref-1).
 
-<figure class="figure-card">
-  <img
-    src="/images/articles/velocity-based-training/fig1-load-velocity-relationship.png"
-    alt="Relationship between relative load and mean propulsive velocity in the bench press"
-    width="695"
-    height="663"
-    loading="lazy"
-  />
-  <figcaption>
-    <strong>Fig. 1</strong> &mdash; Relationship between relative load (% 1RM) and Mean Propulsive Velocity (MPV) directly obtained from 1,596 raw data points derived from 176 incremental tests in the bench press exercise. Solid line depicts the polynomial regression curve; dotted lines indicate 95% prediction bounds. Adapted from González-Badillo & Sánchez-Medina (2010).
-  </figcaption>
+<figure class="math-panel chart">
+  <div class="math-label">Load–velocity curve (bench press)</div>
+  <svg viewBox="0 0 640 400" role="img" aria-label="Mean propulsive velocity falls from about 1.6 m/s at 15% 1RM to about 0.15 m/s at 100% 1RM in the bench press">
+    <g class="chart__grid">
+      <line x1="60" y1="40" x2="600" y2="40" /><line x1="60" y1="115" x2="600" y2="115" /><line x1="60" y1="190" x2="600" y2="190" /><line x1="60" y1="265" x2="600" y2="265" />
+    </g>
+    <path class="chart__axis" d="M60 40 V340 H600" />
+    <g class="chart__tick" text-anchor="end">
+      <text x="50" y="345">0.0</text><text x="50" y="270">0.5</text><text x="50" y="195">1.0</text><text x="50" y="120">1.5</text><text x="50" y="45">2.0</text>
+    </g>
+    <g class="chart__tick" text-anchor="middle">
+      <text x="120" y="362">20</text><text x="240" y="362">40</text><text x="360" y="362">60</text><text x="480" y="362">80</text><text x="600" y="362">100</text>
+    </g>
+    <path class="chart__curve" d="M90.0 101.5 L105.0 108.8 L120.0 116.1 L135.0 123.2 L150.0 130.3 L165.0 137.4 L180.0 144.4 L195.0 151.3 L210.0 158.2 L225.0 165.1 L240.0 171.8 L255.0 178.6 L270.0 185.2 L285.0 191.8 L300.0 198.4 L315.0 204.9 L330.0 211.3 L345.0 217.7 L360.0 224.1 L375.0 230.3 L390.0 236.5 L405.0 242.7 L420.0 248.8 L435.0 254.8 L450.0 260.8 L465.0 266.8 L480.0 272.7 L495.0 278.5 L510.0 284.2 L525.0 289.9 L540.0 295.6 L555.0 301.2 L570.0 306.7 L585.0 312.2 L600.0 317.6" />
+    <text class="chart__label" x="330" y="392" text-anchor="middle">Load (%1RM)</text>
+    <text class="chart__label" x="18" y="190" text-anchor="middle" transform="rotate(-90 18 190)">MPV (m·s⁻¹)</text>
+  </svg>
 </figure>
 
 As intensity increases, peak and mean velocity decrease predictably &mdash; a relationship stable enough to work backwards from. By recording the velocity of a single repetition at a known load, you can accurately estimate an athlete's current one repetition maximum without ever lifting to failure [[1]](#ref-1).
@@ -38,8 +44,6 @@ $$
 
 <div class="math-caption"><span><strong>MPV</strong> &mdash; Mean Propulsive Velocity (m·s⁻¹)</span><span><strong>Load</strong> &mdash; percentage of one repetition maximum (%1RM)</span></div>
 
-**Model Equation** &mdash; Second-order polynomial regression ($R^2 = 0.98$, $\text{SEE} = 0.06\text{ m}\cdot\text{s}^{-1}$, $N = 1{,}596$) relating bar speed in $\text{m}\cdot\text{s}^{-1}$ to relative intensity (% 1RM).
-
 </div>
 
 Solving this quadratic model for $\text{Load}$ allows the instantaneous calculation of the athlete's current training intensity from a single measured repetition:
@@ -52,8 +56,6 @@ $$
 $$
 
 <div class="math-caption"><span><strong>MPV</strong> &mdash; Mean Propulsive Velocity (m·s⁻¹)</span><span><strong>Load</strong> &mdash; percentage of one repetition maximum (%1RM)</span></div>
-
-**Inverse Resolution** &mdash; Directly solves for daily $1\text{RM}$ load percentage based on measured concentric speed, eliminating the requirement for true maximum effort testing.
 
 </div>
 
@@ -68,32 +70,59 @@ The $1\text{RM}$ is by nature a dynamic value, shifting over time through genuin
 
 Beyond simple $1\text{RM}$ estimation, the use cases of tracking velocity extend far further. Within a set, as neuromuscular fatigue accumulates with each repetition, the achievable velocity on that lift progressively declines [[2]](#ref-2).
 
-<figure class="figure-card">
-  <img
-    src="/images/articles/velocity-based-training/fig2-velocity-loss-repetitions.png"
-    alt="Velocity loss decay curve across set repetitions terminating at target threshold"
-    width="1209"
-    height="582"
-    loading="lazy"
-  />
-  <figcaption>
-    <strong>Fig. 2</strong> &mdash; Intra-set velocity decay across consecutive repetitions. The set is auto-regulated and terminated immediately once bar speed drops beneath the prescribed velocity loss threshold, truncating non-productive metabolic fatigue while preserving explosive neuromuscular output.
-  </figcaption>
+<figure class="math-panel chart">
+  <div class="math-label">Intra-set velocity loss</div>
+  <svg viewBox="0 0 640 400" role="img" aria-label="Bar velocity falls from 0.80 m/s on the first repetition; the set stops at repetition 7, the first one below the 20% velocity loss threshold of 0.64 m/s">
+    <g class="chart__grid">
+      <line x1="60" y1="60" x2="600" y2="60" /><line x1="60" y1="116" x2="600" y2="116" /><line x1="60" y1="172" x2="600" y2="172" /><line x1="60" y1="228" x2="600" y2="228" /><line x1="60" y1="284" x2="600" y2="284" />
+    </g>
+    <g class="chart__bar">
+      <rect x="78.6" y="116.0" width="40" height="224.0" /><rect x="155.7" y="127.2" width="40" height="212.8" /><rect x="232.9" y="138.4" width="40" height="201.6" /><rect x="310.0" y="155.2" width="40" height="184.8" /><rect x="387.1" y="172.0" width="40" height="168.0" /><rect x="464.3" y="188.8" width="40" height="151.2" />
+    </g>
+    <rect class="chart__bar chart__bar--stop" x="541.4" y="216.8" width="40" height="123.2" />
+    <line class="chart__threshold" x1="60" y1="205.6" x2="600" y2="205.6" />
+    <line class="chart__threshold" x1="360" y1="30" x2="398" y2="30" />
+    <text class="chart__note" x="600" y="35" text-anchor="end">20% velocity loss · 0.64 m/s</text>
+    <path class="chart__axis" d="M60 60 V340 H600" />
+    <g class="chart__tick" text-anchor="end">
+      <text x="50" y="345">0.4</text><text x="50" y="289">0.5</text><text x="50" y="233">0.6</text><text x="50" y="177">0.7</text><text x="50" y="121">0.8</text><text x="50" y="65">0.9</text>
+    </g>
+    <g class="chart__tick" text-anchor="middle">
+      <text x="98.6" y="362">1</text><text x="175.7" y="362">2</text><text x="252.9" y="362">3</text><text x="330.0" y="362">4</text><text x="407.1" y="362">5</text><text x="484.3" y="362">6</text><text x="561.4" y="362">7</text>
+    </g>
+    <text class="chart__label" x="330" y="392" text-anchor="middle">Repetition</text>
+    <text class="chart__label" x="18" y="200" text-anchor="middle" transform="rotate(-90 18 200)">Velocity (m·s⁻¹)</text>
+  </svg>
 </figure>
 
 Traditionally, proximity to muscular failure has been expressed through Reps in Reserve (RIR), the athlete's subjective estimate of how many more repetitions could have been completed before failure. The concept is intuitive, but its reliability is inherently limited. Research consistently shows that athletes dramatically underestimate proximity to muscular failure, especially when far away from it. Reps in Reserve is a perception, and perception drifts [[3]](#ref-3).
 
 Velocity loss cuts through that subjectivity entirely. By comparing the velocity of each repetition against the first and freshest rep of the set, you get a continuous objective readout of cumulative fatigue [[2]](#ref-2):
 
+<div class="math-panel">
+<div class="math-label">Velocity loss</div>
+
 $$
-\Delta v_{\text{loss}} = \left( \frac{v_{\text{initial}} - v_{\text{current}}}{v_{\text{initial}}} \right) \times 100\%
+\text{Velocity loss}\ (\%) = \frac{v_{\text{initial}} - v_{\text{current}}}{v_{\text{initial}}}
 $$
+
+<div class="math-caption"><span><strong>v<sub>initial</sub></strong> &mdash; velocity of the first repetition (m·s⁻¹)</span><span><strong>v<sub>current</sub></strong> &mdash; velocity of the current repetition (m·s⁻¹)</span></div>
+</div>
 
 Beyond that, real-time velocity tracking allows the athlete to terminate the set at a precisely defined velocity loss threshold. To illustrate, consider an athlete training with a $20\%$ velocity loss threshold. If their first repetition is recorded at $0.80\text{ m/s}$, the set is stopped the moment velocity drops to $0.64\text{ m/s}$, regardless of how the athlete feels:
 
+<div class="math-panel">
+<div class="math-label">Velocity cutoff</div>
+
 $$
-v_{\text{cutoff}} = v_{\text{initial}} \times (1 - 0.20) = 0.80 \times 0.80 = 0.64\text{ m/s}
+\begin{aligned}
+v_{\text{cutoff}} &= v_{\text{initial}} \times (100\% - \text{velocity threshold}) \\
+v_{\text{cutoff}} &= 0.80\text{ m/s} \times (100\% - 20\%) = 0.64\text{ m/s}
+\end{aligned}
 $$
+
+<div class="math-caption"><span><strong>v<sub>cutoff</sub></strong> &mdash; velocity at which the set is stopped (m·s⁻¹)</span><span><strong>Velocity threshold</strong> &mdash; permitted velocity loss (%)</span></div>
+</div>
 
 ---
 
@@ -131,18 +160,12 @@ The overarching value of this approach lies in its objectivity and can be furthe
 
 The practical utility of velocity-based training depends entirely on the accuracy of the device used to capture it. Across four commercially available categories, the evidence reveals meaningful differences that directly determine how each can be applied.
 
-<figure class="figure-card">
-  <img
-    src="/images/articles/velocity-based-training/fig3-vbt-modalities.png"
-    alt="Four commercial VBT modalities: Linear Transducers, Accelerometers, Optic Laser Devices, and Smartphone Applications"
-    width="1206"
-    height="408"
-    loading="lazy"
-  />
-  <figcaption>
-    <strong>Fig. 3</strong> &mdash; Overview of the four primary hardware telemetry modalities utilized in modern velocity-based training. Accuracy, validity, and reproducibility dictate appropriate application.
-  </figcaption>
-</figure>
+<div class="modalities">
+  <figure class="modality"><img src="/images/articles/velocity-based-training/modality-linear-transducer.webp" alt="Linear position transducer tethered to a barbell" width="204" height="204" loading="lazy" /><figcaption>Linear Transducers</figcaption></figure>
+  <figure class="modality"><img src="/images/articles/velocity-based-training/modality-accelerometer.webp" alt="Accelerometer clipped to the end of a barbell" width="204" height="204" loading="lazy" /><figcaption>Accelerometers</figcaption></figure>
+  <figure class="modality"><img src="/images/articles/velocity-based-training/modality-optic-laser.webp" alt="Optic laser velocity device" width="204" height="204" loading="lazy" /><figcaption>Optic Laser Devices</figcaption></figure>
+  <figure class="modality"><img src="/images/articles/velocity-based-training/modality-smartphone.webp" alt="Smartphone on a tripod filming a lift" width="204" height="204" loading="lazy" /><figcaption>Smartphone Applications</figcaption></figure>
+</div>
 
 - **Linear Transducers:** Linear position transducers (e.g. GymAware, Speed4Lifts) represent the current gold standard, consistently demonstrating the highest accuracy and reproducibility across the available literature. They are appropriate for all core VBT applications, including load prescription, longitudinal monitoring, and precise fatigue regulation through velocity loss thresholds.
 - **Accelerometers:** Wearable accelerometer devices offer portability and lower cost, but their accuracy is consistently questionable, with measurement error increasing substantially at higher intensities. Their use is best confined to motivational feedback during high-velocity exercises rather than any application requiring precise velocity measurement.
@@ -160,22 +183,6 @@ Velocity-based training is not a tool for every context. Its value rests on a si
 So is it hype or is it the future? The honest answer is **both**, depending entirely on how it is implemented. The science underlying load-velocity profiling and fatigue regulation is compelling, but outcome evidence remains cautious and the field is still maturing. What separates meaningful application from expensive guesswork is the accuracy of the device in use. The less precise the measurement, the more carefully results must be interpreted, favouring trend analysis over individual data points. Practical adjustments such as averaging the first two repetitions of a set can furthermore help reduce the influence of measurement error on velocity loss calculations.
 
 When adopted thoughtfully with technology matched to the demands of the application, individualised profiling per exercise and athlete, and an honest read of what the current evidence does and does not support, velocity-based training offers something traditional methods cannot: a continuous, objective, and honest picture of what the athlete is actually capable of on any given day.
-
----
-
-<div class="open-access-card">
-  <div class="open-access-header">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="2" y1="12" x2="22" y2="12"></line>
-      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-    </svg>
-    <span>Open Access Research Project &bull; DNAthletic Science</span>
-  </div>
-  <p>
-    This monograph is maintained as an open-access athletic science initiative. Data, regression equations, and methodology are synthesized from peer-reviewed sports physiology and biomechanics literature.
-  </p>
-</div>
 
 ---
 

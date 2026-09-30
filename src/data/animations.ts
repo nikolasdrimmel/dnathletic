@@ -18,7 +18,6 @@ export type FramesAnimation = {
   height: number;
   focusX?: number; // horizontal focal point (0–1) kept in view when cropped
   transparent?: boolean; // alpha frames: fit whole (contain), no edge feathering
-  telemetry?: boolean; // public/anim/<id>/telemetry.json drives the velocity HUD
   span?: [number, number]; // transparent: horizontal extent (0–1) of the athlete across all frames
 };
 
@@ -46,8 +45,7 @@ export const animations: Record<string, Animation> = {
     height: 720,
     focusX: 0.56,
   },
-  // Gemini clip on green screen, keyed to transparent WebP; velocity measured
-  // from the bar path in the video (plate diameter = 0.45 m).
+  // Gemini clip on green screen, keyed to transparent WebP.
   'back-squat': {
     kind: 'frames',
     label: 'Athlete performing a barbell back squat',
@@ -55,7 +53,6 @@ export const animations: Record<string, Animation> = {
     width: 768,
     height: 768,
     transparent: true,
-    telemetry: true,
     span: [0.15, 0.91],
   },
   // Code-drawn fallback for the squat (kept for future movements/articles).
