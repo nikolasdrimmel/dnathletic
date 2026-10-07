@@ -125,6 +125,7 @@ _source/                       # local-only (gitignored) article manuscripts + d
 
 ## Conventions
 
+- **Language: American English** everywhere (articles, UI copy, alt text, docs) — e.g. *fiber, favor, minimize, individualization*. When touching existing text, convert British spellings; only reword beyond spelling when it's genuinely necessary and stays accurate to the meaning.
 - Keep the strict palette + font roles. Match the surrounding code's style and density.
 - Article images live in `public/images/articles/<slug>/`; reference only what's used (no raw dumps).
 - Don't add dependencies or external CDN calls without asking — fonts and KaTeX are deliberately self-hosted.
