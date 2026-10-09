@@ -14,6 +14,7 @@ type Options = {
   focusX: number;            // horizontal focal point kept in view when cropping
   fit?: 'cover' | 'contain'; // contain: transparent clips shown whole
   span?: [number, number];   // contain: horizontal extent of the subject in the frame
+  scale?: number;            // contain: draw at this fraction of the fitted size, centred
   onFirstFrame?: () => void;
 };
 
@@ -105,7 +106,9 @@ export class FrameSequence implements Player {
     // object-fit: cover (keeping focusX in view) or contain.
     const img = this.frames[i]!;
     const contain = this.opts.fit === 'contain';
-    const scale = (contain ? Math.min : Math.max)(cw / img.naturalWidth, ch / img.naturalHeight);
+    const scale =
+      (contain ? Math.min : Math.max)(cw / img.naturalWidth, ch / img.naturalHeight) *
+      (contain ? (this.opts.scale ?? 1) : 1);
     const dw = img.naturalWidth * scale;
     const dh = img.naturalHeight * scale;
     let dx: number;

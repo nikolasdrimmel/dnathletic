@@ -38,6 +38,7 @@ export function mountAthlete(el: HTMLElement, { eager = false, still }: MountOpt
       focusX: Number(el.dataset.focus ?? 0.5),
       fit: el.dataset.fit === 'contain' ? 'contain' : 'cover',
       span: el.dataset.span ? (el.dataset.span.split(',').map(Number) as [number, number]) : undefined,
+      scale: el.dataset.scale ? Number(el.dataset.scale) : undefined,
       onFirstFrame: () => el.classList.add('is-ready'),
     });
     if (eager) {

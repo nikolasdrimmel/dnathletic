@@ -1542,7 +1542,7 @@ a:hover {
 
 @media (max-width: 600px) {
   .math-panel {
-    padding: 1.25rem 1rem;
+    padding: 1.25rem 0.75rem;
   }
   .math-panel .katex {
     font-size: 1em;

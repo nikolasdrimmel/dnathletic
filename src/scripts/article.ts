@@ -1,6 +1,9 @@
-// Article page: gold reading-progress bar.
+// Article page: gold reading-progress bar, formulas fitted to the column.
 
 import { ScrollTrigger } from './motion';
+import { fitMath } from './fit-math';
+
+fitMath(() => ScrollTrigger.refresh());
 
 const progressBar = document.querySelector<HTMLElement>('.read-progress');
 const prose = document.querySelector<HTMLElement>('.prose');

@@ -13,6 +13,7 @@ const { id, class: className = '', eager = false } = Astro.props;
 const anim = getAnimation(id);
 const focus = anim.kind === 'frames' ? (anim.focusX ?? 0.5) : 0.5;
 const transparent = anim.kind === 'frames' && anim.transparent;
+const scale = anim.kind === 'frames' && anim.scale ? anim.scale : undefined;
 ---
 
 <div
@@ -23,6 +24,7 @@ const transparent = anim.kind === 'frames' && anim.transparent;
   data-focus={anim.kind === 'frames' ? focus : undefined}
   data-fit={transparent ? 'contain' : undefined}
   data-span={anim.kind === 'frames' && anim.span ? anim.span.join(',') : undefined}
+  data-scale={scale}
   role="img"
   aria-label={anim.label}
 >
@@ -33,7 +35,7 @@ const transparent = anim.kind === 'frames' && anim.transparent;
       alt=""
       width={anim.width}
       height={anim.height}
-      style={transparent ? 'object-fit: contain' : `object-position: ${focus * 100}% 50%`}
+      style={transparent ? `object-fit: contain${scale ? `; transform: scale(${scale})` : ''}` : `object-position: ${focus * 100}% 50%`}
       loading={eager ? 'eager' : 'lazy'}
       fetchpriority={eager ? 'high' : undefined}
       decoding="async"

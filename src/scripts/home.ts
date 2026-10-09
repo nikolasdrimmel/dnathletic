@@ -32,7 +32,7 @@ function initHero() {
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: () => `+=${Math.round(window.innerHeight * 1.3)}`, // a quick dunk
+        end: () => `+=${Math.round(window.innerHeight * 1.8)}`, // a slow, cinematic dunk
         pin: stage,
         scrub: true,
         invalidateOnRefresh: true,

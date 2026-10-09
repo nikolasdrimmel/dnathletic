@@ -19,6 +19,7 @@ export type FramesAnimation = {
   focusX?: number; // horizontal focal point (0–1) kept in view when cropped
   transparent?: boolean; // alpha frames: fit whole (contain), no edge feathering
   span?: [number, number]; // transparent: horizontal extent (0–1) of the athlete across all frames
+  scale?: number;          // transparent: draw the fitted frames at this fraction of the stage (default 1)
 };
 
 export type MocapAnimation = {
@@ -40,7 +41,7 @@ export const animations: Record<string, Animation> = {
   dunk: {
     kind: 'frames',
     label: 'Basketball player performing a dunk',
-    count: 81, // ends while he still hangs on the rim
+    count: 161, // every source frame up to where he still hangs on the rim
     width: 1280,
     height: 720,
     focusX: 0.56,
@@ -55,16 +56,17 @@ export const animations: Record<string, Animation> = {
     transparent: true,
     span: [0.15, 0.91],
   },
-  // Line-art Viking snatch on transparent WebP (scripts/generate_viking_frames.py,
-  // source clip in _source/).
+  // Flat off-white Viking snatch: Gemini green-screen clip keyed to transparent
+  // WebP in the palette ink (scripts/key_green_frames.py, source in _source/).
   'viking-snatch': {
     kind: 'frames',
     label: 'Viking athlete performing a barbell snatch',
-    count: 96,
-    width: 768,
-    height: 768,
+    count: 141,
+    width: 745,
+    height: 856,
     transparent: true,
-    span: [0.178, 0.822],
+    span: [0.021, 0.979],
+    scale: 0.7,
   },
   // Code-drawn fallback for the squat (kept for future movements/articles).
   'back-squat-mocap': {
