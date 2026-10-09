@@ -85,6 +85,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* Never split words across lines; only an unbreakable string (e.g. a URL) may wrap. */
+  hyphens: none;
+  -webkit-hyphens: none;
+  overflow-wrap: break-word;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
@@ -1238,6 +1242,16 @@ a:hover {
 
 .prose > * + * {
   margin-top: 1.5rem;
+}
+
+/* Body paragraphs: justified, journal-style (no hyphenation — words are never split). */
+.prose > p {
+  text-align: justify;
+}
+
+/* Inline formula + its brackets/punctuation (src/plugins/rehype-nowrap.mjs). */
+.nowrap {
+  white-space: nowrap;
 }
 
 .prose h2 {

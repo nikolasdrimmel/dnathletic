@@ -2,7 +2,7 @@
 title: "Velocity-Based Training"
 subtitle: "Hype or Future?"
 description: "Bar velocity turns load prescription into a dynamic, objective metric. Explore the biomechanical foundation, mathematical models, neuromuscular evidence, and device accuracy."
-pubDate: 2026-09-17
+pubDate: 2026-10-11
 tags: ["sports-science", "biomechanics", "velocity-based-training", "telemetry"]
 draft: false
 animation: viking-snatch
@@ -10,7 +10,7 @@ animation: viking-snatch
 
 ## The Foundation
 
-Velocity-Based Training (VBT) is grounded in the methodology of performing every concentric repetition with maximal intentional speed. Central to this is the near-linear inverse relationship between the maximal velocity achievable on a lift and its relative load expressed as a percentage of the one repetition maximum ($1\text{RM}$) [[1]](#ref-1).
+Velocity-Based Training (VBT) is grounded in the methodology of performing every concentric repetition with maximal intentional speed. Central to this is the near-linear inverse relationship between the maximal velocity achievable on a lift and its relative load expressed as a percentage of the one-repetition maximum ($1\text{RM}$) [[1]](#ref-1).
 
 <figure class="math-panel chart">
   <div class="math-label">Load–velocity curve (bench press)</div>
@@ -31,7 +31,7 @@ Velocity-Based Training (VBT) is grounded in the methodology of performing every
   </svg>
 </figure>
 
-As intensity increases, peak and mean velocity decrease predictably &mdash; a relationship stable enough to work backwards from. By recording the velocity of a single repetition at a known load, you can accurately estimate an athlete's current one repetition maximum without ever lifting to failure [[1]](#ref-1).
+As intensity increases, peak and mean velocity decrease predictably &mdash; a relationship stable enough to work backwards from. By recording the velocity of a single repetition at a known load, you can estimate an athlete's current one-repetition maximum without ever lifting to failure [[1]](#ref-1).
 
 In the bench press, the relationship between Mean Propulsive Velocity ($\text{MPV}$) and relative intensity ($\text{Load}$ as $\%1\text{RM}$) is governed by the second-order polynomial regression:
 
@@ -62,7 +62,7 @@ $$
 The $1\text{RM}$ is by nature a dynamic value, shifting over time through genuine strength progression or simple daily variation in readiness. This is precisely what makes velocity-based estimation so valuable. Rather than treating the $1\text{RM}$ as a fixed reference point tested periodically, it can be tracked continuously and adjusted to reflect the athlete's actual capacity on any given day, making load prescription both more accurate and more responsive.
 
 > **Methodological Note on Specificity**  
-> Load-velocity profiles differ meaningfully between exercises (e.g., bench press vs. back squat) and between the devices and measurement protocols used to capture data. To a lesser extent they also vary between individual athletes. This makes exercise-specific and device-specific profiles essential, and individual baseline calibration strongly advisable.
+> Load-velocity profiles differ meaningfully between exercises (e.g., bench press vs. back squat), between the devices and measurement protocols used to capture data, and between individual athletes. This makes exercise-specific and device-specific profiles essential, and individual profiles, built from the athlete's own lifts, clearly more accurate than group equations.
 
 ---
 
@@ -128,19 +128,15 @@ $$
 
 ## Scientific Justification
 
-Research into velocity-based training is growing rapidly, and the emerging findings paint a promising but nuanced picture.
+Research on velocity-based training is growing quickly, and the picture it paints is promising but nuanced.
 
-On the one hand, a systematic review and meta-analysis by Orange et al. found only trivial differences in strength, power, and sprint speed between velocity-based and traditional percentage-based training methods [[6]](#ref-6). On the surface this appears damning. However, the studies included were primarily testing whether velocity-guided load prescription outperforms traditional methods &mdash; a narrow application that misses the full potential.
+A meta-analysis by Orange et al. found only trivial differences in strength, power, and sprint speed between velocity-based and percentage-based training [[6]](#ref-6). At first glance this looks damning. However, the included studies largely tested velocity-guided load prescription, a narrow use that misses the method's main lever: regulating fatigue through velocity loss thresholds.
 
-The more meaningful question is whether the complete velocity-based training framework is superior to traditional methods. This means looking beyond simple load prescription and examining what intentional fatigue regulation through velocity loss thresholds actually does to the adaptations produced.
+That lever matters. Pareja-Blanco et al. had two groups squat at identical relative loads, stopping each set at either $20\%$ or $40\%$ velocity loss [[4]](#ref-4). Despite performing $40\%$ fewer repetitions, the $20\%$ group gained as much strength and significantly more countermovement jump height. The $40\%$ group gained more muscle size but lost myosin heavy chain IIX (MHC-IIX), the fastest and most powerful fiber type, which the $20\%$ group preserved entirely. In professional football players, the performance results held: a $15\%$ threshold outperformed $30\%$ in strength and jumping, although the $30\%$ group performed $65\%$ more repetitions [[5]](#ref-5).
 
-The evidence for velocity threshold-dependent adaptation is compelling. Pareja-Blanco et al. compared two groups training at identical relative loads in the squat, differing only in permitted velocity loss per set: $20\%$ versus $40\%$ [[4]](#ref-4). Despite performing $40\%$ fewer repetitions, the lower threshold group achieved equivalent strength gains and significantly greater countermovement jump improvements.
+The broadest synthesis, by Jukic et al. ($37$ studies, $735$ participants), confirms the pattern [[9]](#ref-9). Strength gains were similar across thresholds, slightly favoring low to moderate ones. Hypertrophy increased with velocity loss, mostly through the added volume. For jumping, sprinting, and velocity against submaximal loads, the relationship was inverse: the more velocity loss, the smaller the gains.
 
-More importantly, the higher threshold group showed a significant reduction in **myosin heavy chain IIX (MHC-IIX)** content &mdash; the fastest and most powerful muscle fiber type &mdash; while the lower threshold group preserved it entirely. This fast-to-slow phenotypic shift offers a direct biological explanation for why excessive velocity loss compromises explosive performance. These findings were subsequently replicated in professional soccer players training in-season, where a $15\%$ velocity loss threshold produced superior strength and jump improvements compared to $30\%$, despite the higher threshold group performing $65\%$ more total repetitions [[5]](#ref-5).
-
-The broadest synthesis of this evidence comes from Jukic et al., a systematic review and meta-analysis of 37 studies and 735 participants. Strength gains were largely similar across thresholds, though effect sizes consistently favoured low to moderate ranges. Hypertrophy increased near-linearly with velocity loss, driven primarily by the greater volume higher thresholds produce. For jumping, sprinting, and velocity against submaximal loads, a clear inverse relationship emerged: **as velocity loss increased, performance gains decreased**. Higher thresholds additionally risk reducing rate of force development and prolonging recovery, compounding the interference with explosive capacity identified at the fiber type level.
-
-As a result, what the evidence suggests is that avoiding high levels of intra-set fatigue during phases where speed and explosive capacity need to be developed or preserved is exceptionally beneficial for athletic performance. The velocity-based training framework, through its ability to quantify and regulate fatigue in real time via velocity loss thresholds, offers practitioners a more precise and objective way to achieve this than traditional training methods allow.
+The takeaway: when speed and explosiveness need to be built or preserved, avoid high intra-set fatigue. Velocity loss thresholds make that fatigue measurable and controllable in real time, which traditional methods can't do.
 
 ---
 
@@ -178,9 +174,9 @@ The choice of device is not a peripheral consideration but a foundational one. T
 
 ## Conclusion
 
-Velocity-based training is not a tool for every context. Its value rests on a single non-negotiable condition: **every repetition must be performed with maximal intentional speed**, which makes it most naturally suited to athletes for whom explosive output is not a training cue but a competitive reality. When that condition is met, it delivers a genuine upgrade to how load is prescribed, fatigue is managed, and adaptation is monitored.
+Velocity-based training is not a tool for every context. Its value rests on a single non-negotiable condition: every repetition must be performed with maximal intentional speed, which makes it most naturally suited to athletes for whom explosive output is not a training cue but a competitive reality. When that condition is met, it delivers a genuine upgrade to how load is prescribed, fatigue is managed, and adaptation is monitored.
 
-So is it hype or is it the future? The honest answer is **both**, depending entirely on how it is implemented. The science underlying load-velocity profiling and fatigue regulation is compelling, but outcome evidence remains cautious and the field is still maturing. What separates meaningful application from expensive guesswork is the accuracy of the device in use. The less precise the measurement, the more carefully results must be interpreted, favouring trend analysis over individual data points. Practical adjustments such as averaging the first two repetitions of a set can furthermore help reduce the influence of measurement error on velocity loss calculations.
+So is it hype or is it the future? The honest answer is both, depending entirely on how it is implemented. The science underlying load-velocity profiling and fatigue regulation is compelling, but outcome evidence remains cautious and the field is still maturing. What separates meaningful application from expensive guesswork is the accuracy of the device in use. The less precise the measurement, the more carefully results must be interpreted, favouring trend analysis over individual data points. Practical adjustments such as averaging the first two repetitions of a set can furthermore help reduce the influence of measurement error on velocity loss calculations.
 
 When adopted thoughtfully with technology matched to the demands of the application, individualised profiling per exercise and athlete, and an honest read of what the current evidence does and does not support, velocity-based training offers something traditional methods cannot: a continuous, objective, and honest picture of what the athlete is actually capable of on any given day.
 
@@ -212,5 +208,8 @@ When adopted thoughtfully with technology matched to the demands of the applicat
   </li>
   <li id="ref-8">
     <strong>Weakley J, Morrison M, García-Ramos A, Johnston R, James L, Cole MH.</strong> The validity and reliability of commercially available resistance training monitoring devices: a systematic review. <em>Sports Med</em>. 2021;51(3):443–502.
+  </li>
+  <li id="ref-9">
+    <strong>Jukic I, Castilla AP, Ramos AG, Van Hooren B, McGuigan MR, Helms ER.</strong> The acute and chronic effects of implementing velocity loss thresholds during resistance training: a systematic review, meta-analysis, and critical evaluation of the literature. <em>Sports Med</em>. 2023;53(1):177–214.
   </li>
 </ol>

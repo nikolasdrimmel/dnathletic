@@ -3,6 +3,7 @@ import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import rehypeNowrap from './src/plugins/rehype-nowrap.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,7 +15,8 @@ export default defineConfig({
     // remark/rehype (unified) pipeline.
     processor: unified({
       remarkPlugins: [remarkMath],
-      rehypePlugins: [rehypeKatex],
+      // rehypeNowrap must run after KaTeX: it glues brackets/punctuation to the rendered formulas.
+      rehypePlugins: [rehypeKatex, rehypeNowrap],
     }),
   },
 });
