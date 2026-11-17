@@ -506,7 +506,7 @@ a:hover {
 }
 
 /* ============================================================
-   Hero — full-screen dunk, scrubbed by scroll (src/scripts/home.ts)
+   Hero — looping intro video, or a still of the dunk until it exists
    ============================================================ */
 
 .hero {
@@ -527,9 +527,10 @@ a:hover {
 .hero__media {
   position: absolute;
   inset: 0;
-  width: auto;
-  height: auto;
-  /* Bottom edge dissolves into the page so the dunk flows into Articles. */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Bottom edge dissolves into the page so the hero flows into Apps. */
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 66%, transparent 100%);
   mask-image: linear-gradient(to bottom, #000 0%, #000 66%, transparent 100%);
 }
@@ -576,6 +577,10 @@ a:hover {
   color: var(--c-muted);
 }
 
+.hero__cue:hover {
+  color: var(--c-ink);
+}
+
 .hero__cue i {
   width: 1px;
   height: 2.5rem;
@@ -601,6 +606,25 @@ a:hover {
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 76%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 76%, transparent 100%);
   }
+}
+
+/* The 16:9 intro video on portrait screens: the whole frame across the width
+   (the wordmark is too wide to crop), top/bottom edges fading into the page. */
+@media (max-aspect-ratio: 4/5) {
+  .hero__media.hero__video {
+    height: 56.25vw;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  }
+}
+
+/* A dedicated 9:16 hero cut (hero-mobile.mp4) fills the whole portrait screen. */
+.hero__media.is-portrait-cut {
+  inset: 0;
+  height: 100%;
+  transform: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
 }
 
 /* ============================================================
@@ -666,170 +690,303 @@ a:hover {
 }
 
 /* ============================================================
-   Articles — pinned showcase (src/scripts/home.ts)
-   Without JS / with reduced motion the slides simply stack as a list;
-   `.is-pinned` (added by JS) stacks them in one viewport-high stage.
+   Apps — app feature with phone mockups (homepage)
    ============================================================ */
 
-.showcase {
-  position: relative;
-  padding-block: 4.5rem 2rem;
+.apps {
+  padding-block: clamp(4.5rem, 10vh, 7rem) 2.5rem;
 }
 
-.slides {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 4rem;
-  width: 100%;
-  max-width: var(--maxw-wide);
-  margin-inline: auto;
-  padding-inline: 1.5rem;
-}
-
-.slide {
+.app {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 3rem clamp(2.5rem, 6vw, 5rem);
   align-items: center;
-  gap: 2rem clamp(2rem, 5vw, 5rem);
 }
 
-.slide__text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.4rem;
+.app__label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  opacity: 1;
+  margin-bottom: 0.9rem;
 }
 
-/* Clips the text roll between articles. */
-.roll {
-  overflow: hidden;
-  padding-block: 0.1em;
-  margin-block: -0.1em;
+.app__title {
+  font-size: clamp(2.3rem, 5vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  margin-bottom: 1.25rem;
 }
 
-.slide__num {
-  display: flex;
-  align-items: baseline;
+.app__pitch {
+  font-size: 1.08rem;
+  line-height: 1.6;
+  max-width: 34rem;
+  margin-bottom: 2rem;
+}
+
+/* Spec readout: mono label left, value right, hairlines between. */
+.app__specs {
+  border-top: 1px solid var(--c-line);
+  margin-bottom: 1.75rem;
+}
+
+.app__specs > div {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding-block: 0.8rem;
+  border-bottom: 1px solid var(--c-line);
+}
+
+.app__specs dt {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  padding-top: 0.15rem;
+}
+
+.app__specs dd {
+  color: var(--c-ink);
+  font-size: 0.95rem;
+}
+
+.app__status {
+  display: inline-flex;
+  align-items: center;
   gap: 0.6rem;
   font-family: var(--font-mono);
-  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
-  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
   color: var(--c-muted);
   opacity: 1;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--c-line);
+  border-radius: 999px;
+  background: var(--c-panel);
 }
 
-.slide__num span {
-  font-size: clamp(3.25rem, 7.5vw, 6.5rem);
-  font-weight: 500;
-  line-height: 0.95;
-  letter-spacing: -0.05em;
-  color: var(--c-gold);
+.app__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--c-gold);
+  box-shadow: 0 0 0 4px var(--c-gold-dim);
+  flex-shrink: 0;
 }
 
-.slide__title {
-  font-size: clamp(1.8rem, 3.4vw, 3.25rem);
-  line-height: 1.08;
-  letter-spacing: -0.035em;
-  max-width: 17ch;
+/* Three phones fanned out: Home in front, Progress + Result behind.
+   Sized from the container width so the fan scales without overflowing. */
+.app__phones {
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 1 / 0.92;
+  isolation: isolate;
 }
 
-.slide__title a {
+.app__phones::before {
+  content: '';
+  position: absolute;
+  inset: 8% 10%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--c-gold-dim), transparent);
+  filter: blur(20px);
+}
+
+.phone {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 38cqi;
+  padding: 1.6cqi;
+  border-radius: 6.4cqi;
+  background: var(--c-panel);
+  border: 1px solid var(--c-line);
+  box-shadow: 0 30px 60px -20px rgba(17, 19, 21, 0.9), 0 0 0 1px rgba(17, 19, 21, 0.6);
+}
+
+.phone img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 5cqi;
+}
+
+.phone--front {
+  z-index: 2;
+  transform: translate(-50%, -50%);
+}
+
+.phone--back {
+  width: 33cqi;
+  opacity: 0.85;
+}
+
+.phone--left {
+  transform: translate(-128%, -46%) rotate(-7deg);
+}
+
+.phone--right {
+  transform: translate(28%, -46%) rotate(7deg);
+}
+
+@media (max-width: 900px) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .app__phones {
+    order: -1;
+    width: min(100%, 34rem);
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .app__phones {
+    aspect-ratio: 1 / 1.05;
+  }
+  .phone {
+    width: 50cqi;
+  }
+  .phone--back {
+    width: 42cqi;
+  }
+  .phone--left {
+    transform: translate(-112%, -46%) rotate(-7deg);
+  }
+  .phone--right {
+    transform: translate(12%, -46%) rotate(7deg);
+  }
+  .app__specs > div {
+    grid-template-columns: 6rem minmax(0, 1fr);
+  }
+}
+
+/* ============================================================
+   Videos — YouTube cards (homepage, src/data/videos.ts)
+   ============================================================ */
+
+.videos {
+  padding-block: clamp(4rem, 9vh, 6rem) 2.5rem;
+}
+
+.video-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  gap: 1.5rem;
+}
+
+.video-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-lg);
+  background: var(--c-panel);
+  overflow: hidden;
+  color: var(--c-ink);
+  transition: border-color 0.18s ease, transform 0.18s ease, background-color 0.18s ease;
+}
+
+a.video-card:hover {
+  border-color: var(--c-gold);
+  background: var(--c-panel-hover);
+  color: var(--c-ink);
+  transform: translateY(-2px);
+}
+
+.video-card__thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--c-bg);
+  border-bottom: 1px solid var(--c-line);
+  display: grid;
+  place-items: center;
+}
+
+.video-card__thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-card__play {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  padding-left: 3px;
+  border-radius: 50%;
+  background: var(--c-accent);
+  color: var(--c-on-accent);
+  transition: transform 0.18s ease, background-color 0.18s ease;
+}
+
+a.video-card:hover .video-card__play {
+  background: var(--c-gold);
+  transform: scale(1.06);
+}
+
+.video-card.is-soon .video-card__play {
+  background: transparent;
+  color: var(--c-muted);
+  border: 1px solid var(--c-line);
+}
+
+.video-card__time {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  background: rgba(17, 19, 21, 0.85);
   color: var(--c-ink);
 }
 
-.slide__title a:hover {
+.video-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.15rem 1.25rem 1.3rem;
+  flex: 1;
+}
+
+.video-card__title {
+  font-size: 1.15rem;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.video-card__desc {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--c-muted);
+  opacity: 1;
+  flex: 1;
+}
+
+.video-card__meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--c-gold);
 }
 
-.slide__visual {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1;
-  max-height: 72vh;
-}
-
-.slide__visual .athlete {
-  position: absolute;
-  inset: 0;
-}
-
-.showcase.is-pinned {
-  padding-block: 0;
-}
-
-.showcase.is-pinned .showcase__stage {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  height: 100svh;
-  padding-top: calc(var(--header-height) + clamp(1rem, 3.5vh, 2.5rem));
-  padding-bottom: clamp(1rem, 4vh, 3rem);
-}
-
-.showcase.is-pinned .showcase__head {
-  margin-bottom: 0;
-}
-
-.showcase.is-pinned .slides {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  gap: 0;
-}
-
-.showcase.is-pinned .slide {
-  position: absolute;
-  inset: 0 1.5rem;
-  grid-template-rows: minmax(0, 100%);
-}
-
-.showcase.is-pinned .slide__visual {
-  height: 100%;
-  aspect-ratio: auto;
-  max-height: none;
-}
-
-/* Phones: animation on top, article info below. */
-@media (max-width: 768px) {
-  .slides {
-    padding-inline: 1rem;
-  }
-  .slide {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1.25rem;
-  }
-  .slide__visual {
-    order: -1;
-  }
-  .slide__text {
-    gap: 0.9rem;
-    align-items: center;
-    text-align: center;
-  }
-  .slide__num {
-    justify-content: center;
-  }
-  .slide__title {
-    margin-inline: auto;
-  }
-  .showcase.is-pinned .slide {
-    inset: 0 1rem;
-    grid-template-rows: minmax(0, 1fr) auto;
-  }
-  .showcase.is-pinned .showcase__stage {
-    padding-top: calc(var(--header-height) + 0.75rem);
-  }
-  .showcase.is-pinned .showcase__head {
-    padding-bottom: 0.6rem;
-  }
-}
-
-.empty-posts {
-  padding: 3rem 1.5rem;
-  text-align: center;
-  border: 1px dashed var(--c-line);
-  border-radius: var(--radius);
+.video-card.is-soon .video-card__meta {
   color: var(--c-muted);
 }
 
@@ -1728,6 +1885,18 @@ a:hover {
 /* ============================================================
    Accessibility & Reduced Motion
    ============================================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 :focus-visible {
   outline: 2px solid var(--c-gold);

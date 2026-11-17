@@ -1,87 +1,150 @@
 ---
-import { getCollection } from 'astro:content';
+import { existsSync } from 'node:fs';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import AthleteStage from '../components/AthleteStage.astro';
-import { DEFAULT_ANIMATION, framePath } from '../data/animations';
+import { framePath } from '../data/animations';
+import { videos, youtubeUrl, videoThumb } from '../data/videos';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+// Hero: a looping intro video once `public/video/hero.mp4` exists (the
+// wordmark is part of the footage then); until then a still of the dunk with
+// the wordmark drawn on top.
+// Optional `hero-mobile.mp4` (9:16) is used on portrait screens instead.
+const hasPublic = (p: string) => existsSync(new URL(`../../public${p}`, import.meta.url));
+const heroVideo = hasPublic('/video/hero.mp4');
+const heroVideoMobile = hasPublic('/video/hero-mobile.mp4') ? '/video/hero-mobile.mp4' : undefined;
+const heroPoster = hasPublic('/video/hero-poster.webp')
+  ? '/video/hero-poster.webp'
+  : framePath('dunk', 111);
 
-const pad = (n: number) => String(n).padStart(2, '0');
-
-// Bio, split into words for the scroll-linked word-by-word reveal.
-const bioWords =
-  'With DNAthletic, I want to provide a high-quality information source in Strength & Conditioning for ambitious athletes and coaches.'.split(
-    ' '
-  );
+const shots = '/images/apps/max-your-vertical';
 ---
 
 <BaseLayout
   title="DNAthletic - Science, Systems & Performance"
-  description="A minimalist publication exploring strength science, conditioning, and training technology."
-  preloadImage={framePath('dunk', 1)}
+  description="Apps and videos on strength science, conditioning and training technology."
+  preloadImage={heroPoster}
 >
-  <!-- 1. Hero: full-screen dunk, scrubbed by scroll (src/scripts/home.ts) -->
+  <!-- 1. Hero: looping intro video (or a still of the dunk until it exists) -->
   <section id="home" class="hero" data-hero data-scroll-flush>
     <div class="hero__stage">
-      <AthleteStage id="dunk" class="hero__media" eager />
-      <div class="hero__shade" aria-hidden="true"></div>
-      <h1 class="hero__wordmark">DNA<b>thletic</b></h1>
-      <div class="hero__cue" aria-hidden="true">
-        <span>Scroll</span>
-        <i></i>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2. Articles: pinned showcase — one scroll segment per article -->
-  <section id="articles" class="showcase" data-showcase data-scroll-flush aria-labelledby="articles-title">
-    <div class="showcase__stage">
-      <div class="wrap">
-        <div class="section-head showcase__head">
-          <h2 id="articles-title" class="section-title">Articles</h2>
-        </div>
-      </div>
-
-      {posts.length > 0 ? (
-        <ol class="slides">
-          {posts.map((post, i) => (
-            <li class="slide">
-              <div class="slide__text">
-                <div class="roll">
-                  <p class="slide__num" data-roll>
-                    <span>{pad(i + 1)}</span> / {pad(posts.length)}
-                  </p>
-                </div>
-                <div class="roll">
-                  <h3 class="slide__title" data-roll>
-                    <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-                  </h3>
-                </div>
-                <div class="roll">
-                  <a href={`/blog/${post.id}/`} class="btn btn--primary slide__cta" data-roll>
-                    Read article
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                  </a>
-                </div>
-              </div>
-              <div class="slide__visual">
-                <AthleteStage id={post.data.animation ?? DEFAULT_ANIMATION} />
-              </div>
-            </li>
-          ))}
-        </ol>
+      {heroVideo ? (
+        <video
+          class="hero__media hero__video"
+          data-src="/video/hero.mp4"
+          data-src-mobile={heroVideoMobile}
+          poster={heroPoster}
+          muted
+          loop
+          playsinline
+          preload="auto"
+          aria-hidden="true"
+          data-hero-video
+        ></video>
       ) : (
-        <div class="wrap">
-          <p class="empty-posts">No articles published yet. Articles placed in <code>src/content/blog/</code> will appear here automatically.</p>
-        </div>
+        <img class="hero__media hero__still" src={heroPoster} alt="" width="1280" height="720" fetchpriority="high" />
       )}
+      <div class="hero__shade" aria-hidden="true"></div>
+      <h1 class:list={['hero__wordmark', { 'sr-only': heroVideo }]}>DNA<b>thletic</b></h1>
+      <a href="#apps" class="hero__cue" aria-label="Scroll to apps">
+        <span>Apps</span>
+        <i></i>
+      </a>
     </div>
   </section>
 
-  <!-- 3. About Me -->
-  <section id="about" class="section about" data-about aria-labelledby="about-title">
+  <!-- 2. Apps -->
+  <section id="apps" class="section apps" aria-labelledby="apps-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="apps-title" class="section-title">Apps</h2>
+      </div>
+
+      <article class="app">
+        <div class="app__text">
+          <p class="app__label">iOS · Jump testing</p>
+          <h3 class="app__title">Max Your Vertical</h3>
+          <p class="app__pitch">
+            Measure your countermovement jump with the iPhone camera in under 90 seconds, and see whether today is a
+            normal day or a day to reduce load.
+          </p>
+
+          <dl class="app__specs">
+            <div>
+              <dt>Camera</dt>
+              <dd>Up to 240 fps, about ±0.6 cm per frame</dd>
+            </div>
+            <div>
+              <dt>Test</dt>
+              <dd>Two jumps, four taps, under 90 seconds</dd>
+            </div>
+            <div>
+              <dt>Readiness</dt>
+              <dd>Today's jump against your recent trend</dd>
+            </div>
+          </dl>
+
+          <p class="app__status">
+            <span class="app__dot" aria-hidden="true"></span>
+            In beta on TestFlight. App Store release coming soon.
+          </p>
+        </div>
+
+        <div class="app__phones" aria-label="Max Your Vertical screenshots" role="group">
+          <figure class="phone phone--back phone--left">
+            <img src={`${shots}/progress.webp`} alt="Progress screen: four-week jump chart, best, average, trend and streak" width="786" height="1704" loading="lazy" />
+          </figure>
+          <figure class="phone phone--back phone--right">
+            <img src={`${shots}/result.webp`} alt="Result screen: average of two jumps against the recent trend" width="786" height="1704" loading="lazy" />
+          </figure>
+          <figure class="phone phone--front">
+            <img src={`${shots}/home.webp`} alt="Home screen: trophy shelf, today's jump of 40.5 cm and the Start test button" width="786" height="1704" loading="lazy" />
+          </figure>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 3. Videos -->
+  <section id="videos" class="section videos" aria-labelledby="videos-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="videos-title" class="section-title">Videos</h2>
+        <span class="section-badge">YouTube</span>
+      </div>
+
+      <ul class="video-grid">
+        {videos.map((v) => {
+          const inner = (
+            <>
+              <div class="video-card__thumb">
+                {v.youtubeId && <img src={videoThumb(v.youtubeId)} alt="" width="1280" height="720" loading="lazy" />}
+                <span class="video-card__play" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z" /></svg>
+                </span>
+                {v.duration && <span class="video-card__time">{v.duration}</span>}
+              </div>
+              <div class="video-card__body">
+                <h3 class="video-card__title">{v.title}</h3>
+                <p class="video-card__desc">{v.description}</p>
+                <span class="video-card__meta">{v.youtubeId ? 'Watch on YouTube' : 'Coming soon'}</span>
+              </div>
+            </>
+          );
+          return (
+            <li>
+              {v.youtubeId ? (
+                <a class="video-card" href={youtubeUrl(v.youtubeId)} target="_blank" rel="noopener noreferrer">{inner}</a>
+              ) : (
+                <div class="video-card is-soon">{inner}</div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. About Me -->
+  <section id="about" class="section about" aria-labelledby="about-title">
     <div class="wrap">
       <div class="section-head">
         <h2 id="about-title" class="section-title">About Me</h2>
@@ -91,7 +154,6 @@ const bioWords =
         <div class="about-me__profile">
           <div class="about-me__photo-wrap">
             <svg class="about-me__ring" viewBox="0 0 100 100" aria-hidden="true">
-              <circle class="about-me__ring-track" cx="50" cy="50" r="48.5" />
               <circle class="about-me__ring-progress" cx="50" cy="50" r="48.5" pathLength="100" />
             </svg>
             <img
@@ -104,21 +166,16 @@ const bioWords =
             />
           </div>
           <ul class="about-me__id">
-            <li class="about-me__name" data-cred>Nikolas Drimmel</li>
-            <li class="about-me__title" data-cred>Sport Student</li>
-            <li class="about-me__cred" data-cred>B.Sc. Sport and Performance</li>
-            <li class="about-me__cred" data-cred>German Sports University Cologne</li>
+            <li class="about-me__name">Nikolas Drimmel</li>
+            <li class="about-me__title">Sport Student</li>
+            <li class="about-me__cred">B.Sc. Sport and Performance</li>
+            <li class="about-me__cred">German Sports University Cologne</li>
           </ul>
         </div>
 
         <p class="about-me__bio">
-          {bioWords.map((word) =>
-            word.startsWith('DNAthletic') ? (
-              <span class="w"><strong>DNAthletic</strong>{word.slice('DNAthletic'.length)} </span>
-            ) : (
-              <span class="w">{word} </span>
-            )
-          )}
+          With <strong>DNAthletic</strong>, I want to provide a high-quality information source in Strength &amp;
+          Conditioning for ambitious athletes and coaches.
         </p>
       </div>
     </div>
